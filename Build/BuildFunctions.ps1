@@ -33,7 +33,7 @@ function Test() {
 function NugetPack() {
     Write-Host "Creating NuGet packages ..."
     $NugetPackProperties | % {
-        Exec { & $NugetExecutable pack $NuspecPath -Version $Version -Properties $_ -OutputDirectory $BuildOutputPath -NoPackageAnalysis }
+        Exec { & $NugetExecutable pack $NuspecPath -Properties $_ -OutputDirectory $BuildOutputPath -NoPackageAnalysis }
     }
 }
 
@@ -55,4 +55,8 @@ function Exec([scriptblock] $cmd) {
     if ($LastExitCode -ne 0) {
         throw "The following call failed with exit code $LastExitCode. '$cmd'"
     }
+}
+
+function StripLastPartFromVersion([string] $value) {
+    return $value -replace "\.\d+$",""
 }
