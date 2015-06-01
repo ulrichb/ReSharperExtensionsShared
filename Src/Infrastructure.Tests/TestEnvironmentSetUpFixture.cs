@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
-using Infrastructure;
 using JetBrains.Application;
 using JetBrains.Threading;
 using JetBrains.Util;
 using NUnit.Framework;
+using ReSharperExtensionsShared;
 
 [assembly: TestDataPathBase(@"TestData")]
 

@@ -8,7 +8,7 @@ using JetBrains.ReSharper.TestFramework;
 using JetBrains.Util;
 using NUnit.Framework;
 
-namespace Infrastructure.Tests
+namespace ReSharperExtensionsShared.Tests
 {
     [TestFixture]
     public class DebugUtilitiesTest : BaseTestWithSingleProject

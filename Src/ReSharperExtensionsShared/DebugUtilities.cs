@@ -3,7 +3,7 @@ using System.Diagnostics;
 using JetBrains.Annotations;
 using JetBrains.ReSharper.Psi;
 
-namespace Infrastructure
+namespace ReSharperExtensionsShared
 {
     public static class DebugUtilities
     {

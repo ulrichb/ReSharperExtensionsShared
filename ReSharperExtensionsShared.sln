@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
 VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure.R82", "Src\Infrastructure\Infrastructure.R82.csproj", "{4F30B7AF-8DB6-4528-9D46-9C9F8AA049BC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReSharperExtensionsShared.R82", "Src\ReSharperExtensionsShared\ReSharperExtensionsShared.R82.csproj", "{4F30B7AF-8DB6-4528-9D46-9C9F8AA049BC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure.Tests.R82", "Src\Infrastructure.Tests\Infrastructure.Tests.R82.csproj", "{9184730F-FB46-470E-8EB5-22C47EDCF142}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReSharperExtensionsShared.Tests.R82", "Src\ReSharperExtensionsShared.Tests\ReSharperExtensionsShared.Tests.R82.csproj", "{9184730F-FB46-470E-8EB5-22C47EDCF142}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{4998CFBC-6ECF-4D29-954C-CF020091308E}"
 	ProjectSection(SolutionItems) = preProject
@@ -19,7 +19,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		LICENSE = LICENSE
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure.R90", "Src\Infrastructure\Infrastructure.R90.csproj", "{2EC72DFB-257C-4156-B701-6E2E0378C97B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReSharperExtensionsShared.R90", "Src\ReSharperExtensionsShared\ReSharperExtensionsShared.R90.csproj", "{2EC72DFB-257C-4156-B701-6E2E0378C97B}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Src", "Src", "{26B55A35-CCB1-4635-871A-EE770850A5F2}"
 EndProject
