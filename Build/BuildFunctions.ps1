@@ -27,12 +27,12 @@ function Test() {
 
     $testResultsPath = Join-Path $BuildOutputPath "TestResult.xml"
 
-    $nunitArgs = "$NUnitTestAssemblyPaths /nologo /noshadow /framework=$NUnitFrameworkVersion /domain=Multiple /result=$testResultsPath"
+    $nunitArgs = "$NUnitTestAssemblyPaths /nologo /noshadow /framework=$NUnitFrameworkVersion /domain=Multiple /labels /result=$testResultsPath"
 
     $openCoverExePath = Join-Path (GetSolutionPackagePath "OpenCover") "OpenCover.Console.exe"
     $coverageResultsPath = Join-Path $BuildOutputPath "TestCoverage.xml"
 
-    Exec { & $openCoverExePath -target:$nunitExePath "-targetargs:$nunitArgs" "-filter:$TestCoverageFilter" -output:$coverageResultsPath -register:user }
+    Exec { & $openCoverExePath -target:$nunitExePath "-targetargs:$nunitArgs" "-filter:$TestCoverageFilter" -returntargetcode -register:user -output:$coverageResultsPath }
 
     $reportGeneratorExePath = Join-Path (GetSolutionPackagePath "ReportGenerator") "ReportGenerator.exe"
     $coverageReportPath = Join-Path $BuildOutputPath "TestCoverage"
