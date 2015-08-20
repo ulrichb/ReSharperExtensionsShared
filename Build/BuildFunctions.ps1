@@ -32,7 +32,7 @@ function Test() {
     $openCoverExePath = Join-Path (GetSolutionPackagePath "OpenCover") tools\OpenCover.Console.exe
     $coverageResultsPath = Join-Path $BuildOutputPath "TestCoverage.xml"
 
-    Exec { & $openCoverExePath -target:$nunitExePath "-targetargs:$nunitArgs" "-filter:$TestCoverageFilter" -returntargetcode -register:user -output:$coverageResultsPath }
+    Exec { & $openCoverExePath -target:$nunitExePath "-targetargs:$nunitArgs" "-filter:$TestCoverageFilter" "-excludebyattribute:*.ExcludeFromCodeCoverage*" -returntargetcode -register:user -output:$coverageResultsPath }
 
     $reportGeneratorExePath = Join-Path (GetSolutionPackagePath "ReportGenerator") tools\ReportGenerator.exe
     $coverageReportPath = Join-Path $BuildOutputPath "TestCoverage"
