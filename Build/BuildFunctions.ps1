@@ -41,8 +41,11 @@ function Test() {
 
 function NugetPack() {
     Write-Host "Creating NuGet packages ..."
+
+    $releaseNotes = [System.IO.File]::ReadAllText("History.md")
+
     $NugetPackProperties | % {
-        Exec { & $NugetExecutable pack $NuspecPath -Properties $_ -OutputDirectory $BuildOutputPath -NoPackageAnalysis }
+        Exec { & $NugetExecutable pack $NuspecPath -Properties $_ -Properties ReleaseNotes=$releaseNotes -OutputDirectory $BuildOutputPath -NoPackageAnalysis }
     }
 }
 
