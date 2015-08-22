@@ -1,19 +1,21 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\..\packages\JetBrains.ReSharper.SDK.Tests.9.2.20150819.163916\build\JetBrains.ReSharper.SDK.Tests.props" Condition="Exists('..\..\packages\JetBrains.ReSharper.SDK.Tests.9.2.20150819.163916\build\JetBrains.ReSharper.SDK.Tests.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{2EC72DFB-257C-4156-B701-6E2E0378C97B}</ProjectGuid>
+    <ProjectGuid>{60C7BA9F-6157-4747-AA79-9B6731F61856}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ReSharperExtensionsShared</RootNamespace>
-    <AssemblyName>ReSharperExtensionsShared.R92</AssemblyName>
+    <RootNamespace>ReSharperExtensionsShared.Tests</RootNamespace>
+    <AssemblyName>ReSharperExtensionsShared.Tests.R92</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <BaseIntermediateOutputPath>obj.R92\</BaseIntermediateOutputPath>
     <ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>None</ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>
-    <NuGetPackageImportStamp>1b96df35</NuGetPackageImportStamp>
+    <NuGetPackageImportStamp>f439f6dc</NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -155,12 +157,24 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DebugUtilities.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ZoneMarker.cs" />
+    <None Include="test\data\DebugUtilitiesTest\GenericClass.cs" />
+    <Compile Include="DebugUtilitiesTest.cs" />
+    <None Include="test\data\DebugUtilitiesTest\SampleClass.cs" />
+    <None Include="test\data\nuget.config" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.ReSharperExtensionsShared.R92.config" />
+    <None Include="packages.ReSharperExtensionsShared.Tests.R92.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ReSharperExtensionsShared\ReSharperExtensionsShared.R92.csproj">
+      <Project>{2ec72dfb-257c-4156-b701-6e2e0378c97b}</Project>
+      <Name>ReSharperExtensionsShared.R92</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\" />
+    <Folder Include="TestData\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
@@ -186,6 +200,7 @@
     <Error Condition="!Exists('..\..\packages\JetBrains.Psi.Features.test.Framework.103.0.20150819.145114\build\JetBrains.Psi.Features.test.Framework.Targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\JetBrains.Psi.Features.test.Framework.103.0.20150819.145114\build\JetBrains.Psi.Features.test.Framework.Targets'))" />
     <Error Condition="!Exists('..\..\packages\JetBrains.Build.Platform.Tasks.ThemedIconsPacker.2.0.20150812.0\build\JetBrains.Build.Platform.Tasks.ThemedIconsPacker.Targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\JetBrains.Build.Platform.Tasks.ThemedIconsPacker.2.0.20150812.0\build\JetBrains.Build.Platform.Tasks.ThemedIconsPacker.Targets'))" />
     <Error Condition="!Exists('..\..\packages\JetBrains.ReSharper.SDK.9.2.20150819.163916\build\JetBrains.ReSharper.SDK.Targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\JetBrains.ReSharper.SDK.9.2.20150819.163916\build\JetBrains.ReSharper.SDK.Targets'))" />
+    <Error Condition="!Exists('..\..\packages\JetBrains.ReSharper.SDK.Tests.9.2.20150819.163916\build\JetBrains.ReSharper.SDK.Tests.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\JetBrains.ReSharper.SDK.Tests.9.2.20150819.163916\build\JetBrains.ReSharper.SDK.Tests.props'))" />
   </Target>
   <Import Project="..\..\packages\JetBrains.Platform.Core.Shell.103.0.20150818.190334\build\JetBrains.Platform.Core.Shell.Targets" Condition="Exists('..\..\packages\JetBrains.Platform.Core.Shell.103.0.20150818.190334\build\JetBrains.Platform.Core.Shell.Targets')" />
   <Import Project="..\..\packages\JetBrains.Platform.Core.Text.103.0.20150818.200225\build\JetBrains.Platform.Core.Text.Targets" Condition="Exists('..\..\packages\JetBrains.Platform.Core.Text.103.0.20150818.200225\build\JetBrains.Platform.Core.Text.Targets')" />

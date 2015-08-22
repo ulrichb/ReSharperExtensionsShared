@@ -7,7 +7,7 @@ using JetBrains.Util;
 using NUnit.Framework;
 using ReSharperExtensionsShared;
 
-[assembly: TestDataPathBase(@"TestData")]
+[assembly: TestDataPathBase(@"test\data")]
 
 /// <summary>
 /// Test environment. Must be in the global namespace.

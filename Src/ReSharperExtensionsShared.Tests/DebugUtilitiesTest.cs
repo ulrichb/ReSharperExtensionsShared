@@ -13,6 +13,11 @@ namespace ReSharperExtensionsShared.Tests
     [TestFixture]
     public class DebugUtilitiesTest : BaseTestWithSingleProject
     {
+        protected override string RelativeTestDataPath
+        {
+            get { return typeof (DebugUtilitiesTest).Name; }
+        }
+
         [Test]
         public void FormatIncludingContext()
         {
@@ -53,12 +58,12 @@ namespace ReSharperExtensionsShared.Tests
 
         private void UsingClassInFile(string fileName, Action<IClass> action)
         {
-            WithSingleProject(GetTestDataFilePath(fileName),
+            WithSingleProject(GetTestDataFilePath2(fileName).FullPath,
                 (lifetime, solution, project) => RunGuarded(() =>
                 {
                     var primaryPsiFile = project.GetAllProjectFiles().Single().GetPrimaryPsiFile().NotNull();
 
-                    var classElement = (IClass)primaryPsiFile.EnumerateSubTree().OfType<IClassDeclaration>().Single().DeclaredElement.NotNull();
+                    var classElement = (IClass) primaryPsiFile.EnumerateSubTree().OfType<IClassDeclaration>().Single().DeclaredElement.NotNull();
 
                     action(classElement);
                 }));
