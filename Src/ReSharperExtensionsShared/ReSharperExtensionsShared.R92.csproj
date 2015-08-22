@@ -156,6 +156,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Debugging\DebugUtility.cs" />
+    <Compile Include="Highlighting\SimpleTreeNodeHighlightingBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ZoneMarker.cs" />
   </ItemGroup>

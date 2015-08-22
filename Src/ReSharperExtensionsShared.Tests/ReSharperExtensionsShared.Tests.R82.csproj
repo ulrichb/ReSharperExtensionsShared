@@ -38,6 +38,10 @@
     <NoWarn>1685</NoWarn>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="FakeItEasy, Version=1.25.3.0, Culture=neutral, PublicKeyToken=eff28e2146d5fd2c, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\FakeItEasy.1.25.3\lib\net40\FakeItEasy.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -48,10 +52,11 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="TestData\DebugUtilitiesTest\GenericClass.cs" />
-    <Compile Include="Integrative\DebugUtilityTest.cs" />
-    <None Include="TestData\DebugUtilitiesTest\SampleClass.cs" />
     <Compile Include="TestEnvironmentSetUpFixture.R82.cs" />
+    <None Include="test\data\DebugUtilityTest\GenericClass.cs" />
+    <None Include="test\data\DebugUtilityTest\SampleClass.cs" />
+    <Compile Include="Highlighting\SimpleTreeNodeHighlightingBaseTest.cs" />
+    <Compile Include="Integrative\DebugUtilityTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.ReSharperExtensionsShared.Tests.R82.config" />
