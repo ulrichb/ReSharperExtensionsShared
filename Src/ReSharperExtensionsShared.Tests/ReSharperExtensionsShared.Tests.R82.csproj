@@ -49,7 +49,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="TestData\DebugUtilitiesTest\GenericClass.cs" />
-    <Compile Include="DebugUtilitiesTest.cs" />
+    <Compile Include="Integrative\DebugUtilityTest.cs" />
     <None Include="TestData\DebugUtilitiesTest\SampleClass.cs" />
     <Compile Include="TestEnvironmentSetUpFixture.R82.cs" />
   </ItemGroup>

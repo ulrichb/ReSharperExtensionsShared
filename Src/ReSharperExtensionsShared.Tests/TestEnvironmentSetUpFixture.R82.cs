@@ -5,7 +5,7 @@ using JetBrains.Application;
 using JetBrains.Threading;
 using JetBrains.Util;
 using NUnit.Framework;
-using ReSharperExtensionsShared;
+using ReSharperExtensionsShared.Debugging;
 
 [assembly: TestDataPathBase(@"test\data")]
 
@@ -25,7 +25,7 @@ public class TestEnvironmentSetUpFixture : ReSharperTestEnvironmentAssembly
         // Test assembly
         yield return Assembly.GetExecutingAssembly();
 
-        yield return typeof(DebugUtilities).Assembly;
+        yield return typeof(DebugUtility).Assembly;
     }
 
     public override void SetUp()

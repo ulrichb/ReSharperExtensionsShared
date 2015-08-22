@@ -3,9 +3,9 @@ using System.Diagnostics;
 using JetBrains.Annotations;
 using JetBrains.ReSharper.Psi;
 
-namespace ReSharperExtensionsShared
+namespace ReSharperExtensionsShared.Debugging
 {
-    public static class DebugUtilities
+    public static class DebugUtility
     {
         public static string FormatIncludingContext([CanBeNull] IDeclaredElement element)
         {

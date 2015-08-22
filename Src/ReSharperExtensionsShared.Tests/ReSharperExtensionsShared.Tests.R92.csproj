@@ -158,9 +158,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ZoneMarker.cs" />
-    <None Include="test\data\DebugUtilitiesTest\GenericClass.cs" />
-    <Compile Include="DebugUtilitiesTest.cs" />
-    <None Include="test\data\DebugUtilitiesTest\SampleClass.cs" />
+    <None Include="test\data\DebugUtilityTest\GenericClass.cs" />
+    <Compile Include="Integrative\DebugUtilityTest.cs" />
+    <None Include="test\data\DebugUtilityTest\SampleClass.cs" />
     <None Include="test\data\nuget.config" />
   </ItemGroup>
   <ItemGroup>
@@ -174,7 +174,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />
-    <Folder Include="TestData\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
