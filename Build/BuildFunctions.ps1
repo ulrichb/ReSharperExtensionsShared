@@ -5,19 +5,22 @@ function Clean() {
 
 function PackageRestore() {
     Write-Host "Restoring packages ..."
-    Exec { & $NugetExecutable restore $SolutionFile }
-}
-
-function UpdateAssemblyVersion() {
-    Write-Host "Updating assembly version in `"$AssemblyVersionFilePath`" ..."
-    $assemblyVersionFileContent = [System.IO.File]::ReadAllText($AssemblyVersionFilePath)
-    $newContent = ($assemblyVersionFileContent -Replace "(Assembly(?:File)?Version)\s*\(\s*`"[^`"]+`"\s*\)","`$1(`"$Version`")")
-    [System.IO.File]::WriteAllText($AssemblyVersionFilePath, $newContent)
+    Exec { & $NugetExecutable restore $SolutionFilePath }
 }
 
 function Build() {
-    Write-Host "Starting build ..."
-    Exec { & $MSBuildPath $SolutionFile /v:m /t:Build "/p:Configuration=$Configuration" }
+    Write-Host "Updating version to '$Version' in '$AssemblyVersionFilePath' ..."
+    $assemblyVersionFileContent = [System.IO.File]::ReadAllText($AssemblyVersionFilePath)
+    $newContent = ($assemblyVersionFileContent -Replace "(Assembly(?:File)?Version)\s*\(\s*`"[^`"]+`"\s*\)","`$1(`"$Version`")")
+    [System.IO.File]::WriteAllText($AssemblyVersionFilePath, $newContent)
+
+    try {
+        Write-Host "Running MSBuild for solution ..."
+        Exec { & $MSBuildPath $SolutionFilePath /v:m /t:Build "/p:Configuration=$Configuration" }
+
+    } finally {
+        [System.IO.File]::WriteAllText($AssemblyVersionFilePath, $assemblyVersionFileContent)
+    }
 }
 
 function Test() {
