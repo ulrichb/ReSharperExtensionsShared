@@ -16,7 +16,7 @@ function Build() {
 
     try {
         Write-Host "Running MSBuild for solution ..."
-        Exec { & $MSBuildPath $SolutionFilePath /v:m /t:Build "/p:Configuration=$Configuration" }
+        Exec { & $MSBuildPath $SolutionFilePath /v:m /maxcpucount /t:Build "/p:Configuration=$Configuration" }
 
     } finally {
         [System.IO.File]::WriteAllText($AssemblyVersionFilePath, $assemblyVersionFileContent)
