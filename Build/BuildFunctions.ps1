@@ -60,7 +60,7 @@ function NugetPush() {
 }
 
 function GetSolutionPackagePath([string] $packageId) {
-    [xml] $xml = Get-Content (Join-Path ".nuget" "packages.config")
+    [xml] $xml = Get-Content "packages.config"
     $version = $xml.SelectNodes("/packages/package[@id = '$packageId']/@version") | Select -ExpandProperty Value
     return Join-Path "packages" "$packageId.$version"
 }
