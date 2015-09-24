@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Psi;
@@ -14,10 +15,7 @@ namespace ReSharperExtensionsShared.Tests.Integrative
     [TestFixture]
     public class DebugUtilityTest : BaseTestWithSingleProject
     {
-        protected override string RelativeTestDataPath
-        {
-            get { return typeof (DebugUtilityTest).Name; }
-        }
+        protected override string RelativeTestDataPath => typeof (DebugUtilityTest).Name;
 
         [Test]
         public void FormatIncludingContext()
@@ -55,6 +53,12 @@ namespace ReSharperExtensionsShared.Tests.Integrative
         public void FormatIncludingContext_WithNullInput()
         {
             Assert.That(DebugUtility.FormatIncludingContext(null), Is.EqualTo("NULL"));
+        }
+
+        [Test]
+        public void FormatWithElapsed()
+        {
+            Assert.That(DebugUtility.FormatWithElapsed("message", new Stopwatch()), Is.EqualTo("message took 0 usec"));
         }
 
         private void UsingClassInFile(string fileName, Action<IClass> action)

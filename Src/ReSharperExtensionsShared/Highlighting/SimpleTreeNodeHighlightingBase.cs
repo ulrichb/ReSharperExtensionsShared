@@ -23,22 +23,13 @@ namespace ReSharperExtensionsShared.Highlighting
         }
 
         [NotNull]
-        public T TreeNode { get; private set; }
+        public T TreeNode { get; }
 
-        public string ToolTip
-        {
-            get { return _toolTipText; }
-        }
+        public string ToolTip => _toolTipText;
 
-        public string ErrorStripeToolTip
-        {
-            get { return _toolTipText; }
-        }
+        public string ErrorStripeToolTip => _toolTipText;
 
-        public int NavigationOffsetPatch
-        {
-            get { return 0; }
-        }
+        public int NavigationOffsetPatch => 0;
 
         public bool IsValid()
         {
