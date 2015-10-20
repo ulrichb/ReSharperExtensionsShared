@@ -10,8 +10,8 @@ function PackageRestore() {
 
 function Build() {
     Write-Host "Updating version to '$Version' in '$AssemblyVersionFilePath' ..."
-    $assemblyVersionFileContent = [System.IO.File]::ReadAllText($AssemblyVersionFilePath)
-    $newContent = ($assemblyVersionFileContent -Replace "(Assembly(?:File)?Version)\s*\(\s*`"[^`"]+`"\s*\)","`$1(`"$Version`")")
+    $assemblyVersionFileText = [System.IO.File]::ReadAllText($AssemblyVersionFilePath)
+    $newContent = ($assemblyVersionFileText -Replace "(Assembly(?:File)?Version)\s*\(\s*`"[^`"]+`"\s*\)","`$1(`"$Version`")")
     [System.IO.File]::WriteAllText($AssemblyVersionFilePath, $newContent)
 
     try {
@@ -19,7 +19,7 @@ function Build() {
         Exec { & $MSBuildPath $SolutionFilePath /v:m /maxcpucount /t:Build "/p:Configuration=$Configuration;TreatWarningsAsErrors=True" }
 
     } finally {
-        [System.IO.File]::WriteAllText($AssemblyVersionFilePath, $assemblyVersionFileContent)
+        [System.IO.File]::WriteAllText($AssemblyVersionFilePath, $assemblyVersionFileText)
     }
 }
 
@@ -43,12 +43,23 @@ function Test() {
 }
 
 function NugetPack() {
+    Write-Host "Injecting release notes text into .nuspec ..."
+
+    $releaseNotesText = [System.IO.File]::ReadAllText("History.md")
+    $savedNuspecText = [System.IO.File]::ReadAllText($NuspecPath)
+
+    [xml] $nuspecXml = Get-Content $NuspecPath
+    $nuspecXml.package.metadata.releaseNotes = $releaseNotesText
+    $nuspecXml.Save($NuspecPath)
+
     Write-Host "Creating NuGet packages ..."
 
-    $releaseNotes = "<![CDATA[" + [System.IO.File]::ReadAllText("History.md") + "]]>"
-
-    $NugetPackProperties | % {
-        Exec { & $NugetExecutable pack $NuspecPath -Properties $_ -Properties ReleaseNotes=$releaseNotes -OutputDirectory $BuildOutputPath -NoPackageAnalysis }
+    try {
+        $NugetPackProperties | % {
+            Exec { & $NugetExecutable pack $NuspecPath -Properties $_ -OutputDirectory $BuildOutputPath -NoPackageAnalysis }
+        }
+    } finally {
+        [System.IO.File]::WriteAllText($NuspecPath, $savedNuspecText)
     }
 }
 
