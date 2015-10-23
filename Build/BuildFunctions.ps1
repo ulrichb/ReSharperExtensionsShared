@@ -10,17 +10,26 @@ function PackageRestore() {
 
 function Build() {
     Write-Host "Updating version to '$Version' in '$AssemblyVersionFilePath' ..."
+    $versionWithoutPostfix = $Version -Replace "-\w+$",""
     $assemblyVersionFileText = [System.IO.File]::ReadAllText($AssemblyVersionFilePath)
-    $newContent = ($assemblyVersionFileText -Replace "(Assembly(?:File)?Version)\s*\(\s*`"[^`"]+`"\s*\)","`$1(`"$Version`")")
-    [System.IO.File]::WriteAllText($AssemblyVersionFilePath, $newContent)
+    $savedAssemblyVersionFileText = $assemblyVersionFileText
+    $assemblyVersionFileText = _ReplaceVersionAtributeValue $assemblyVersionFileText "AssemblyVersion" $versionWithoutPostfix
+    $assemblyVersionFileText = _ReplaceVersionAtributeValue $assemblyVersionFileText "AssemblyFileVersion" $versionWithoutPostfix
+    $assemblyVersionFileText = _ReplaceVersionAtributeValue $assemblyVersionFileText "AssemblyInformationalVersion" $Version
+    [System.IO.File]::WriteAllText($AssemblyVersionFilePath, $assemblyVersionFileText)
 
     try {
         Write-Host "Running MSBuild for solution ..."
         Exec { & $MSBuildPath $SolutionFilePath /v:m /maxcpucount /t:Build "/p:Configuration=$Configuration;TreatWarningsAsErrors=True" }
 
     } finally {
-        [System.IO.File]::WriteAllText($AssemblyVersionFilePath, $assemblyVersionFileText)
+        [System.IO.File]::WriteAllText($AssemblyVersionFilePath, $savedAssemblyVersionFileText)
     }
+}
+
+function _ReplaceVersionAtributeValue($fileText, $attributeIdentifier, $value) {
+    Write-Host "Replacing '$attributeIdentifier' attribute value with '$value' ..."
+    return $fileText -Replace "(\[assembly:\s*$attributeIdentifier\s*)\([^)]+\)","`${1}(`"$value`")"
 }
 
 function Test() {
@@ -40,6 +49,10 @@ function Test() {
     $reportGeneratorExePath = Join-Path (GetSolutionPackagePath "ReportGenerator") tools\ReportGenerator.exe
     $coverageReportPath = Join-Path $BuildOutputPath "TestCoverage"
     Exec { & $reportGeneratorExePath -reports:$coverageResultsPath -targetdir:$coverageReportPath -verbosity:Info }
+}
+
+function CalcNuGetPackageVersion([string] $reSharperVersion) {
+    return $Version -Replace "(\d+\.\d+\.\d+\.)\d+","`${1}$reSharperVersion"
 }
 
 function NugetPack() {
@@ -81,8 +94,4 @@ function Exec([scriptblock] $cmd) {
     if ($LastExitCode -ne 0) {
         throw "The following call failed with exit code $LastExitCode. '$cmd'"
     }
-}
-
-function StripLastPartFromVersion([string] $value) {
-    return $value -replace "\.\d+$",""
 }
