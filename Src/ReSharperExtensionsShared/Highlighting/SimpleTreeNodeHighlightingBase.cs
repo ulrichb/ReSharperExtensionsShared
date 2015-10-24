@@ -1,14 +1,7 @@
-using System;
 using JetBrains.Annotations;
 using JetBrains.DocumentModel;
-using JetBrains.ReSharper.Psi.Tree;
-#if RESHARPER8
-using IHighlighting = JetBrains.ReSharper.Daemon.Impl.IHighlightingWithRange;
-
-#else
 using JetBrains.ReSharper.Feature.Services.Daemon;
-
-#endif
+using JetBrains.ReSharper.Psi.Tree;
 
 namespace ReSharperExtensionsShared.Highlighting
 {

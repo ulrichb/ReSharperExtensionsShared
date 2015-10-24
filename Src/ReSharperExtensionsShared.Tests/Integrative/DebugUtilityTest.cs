@@ -68,7 +68,7 @@ namespace ReSharperExtensionsShared.Tests.Integrative
                 {
                     var primaryPsiFile = project.GetAllProjectFiles().Single().GetPrimaryPsiFile().NotNull();
 
-                    var classElement = (IClass) primaryPsiFile.EnumerateSubTree().OfType<IClassDeclaration>().Single().DeclaredElement.NotNull();
+                    var classElement = (IClass) primaryPsiFile.ThisAndDescendants<IClassDeclaration>().Collect().Single().DeclaredElement.NotNull();
 
                     action(classElement);
                 }));
