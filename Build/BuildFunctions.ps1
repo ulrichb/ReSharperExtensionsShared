@@ -54,7 +54,41 @@ function Test() {
 
     $reportGeneratorExePath = Join-Path (GetSolutionPackagePath "ReportGenerator") tools\ReportGenerator.exe
     $coverageReportPath = Join-Path $BuildOutputPath "TestCoverage"
-    Exec { & $reportGeneratorExePath -reports:$coverageResultsPath -targetdir:$coverageReportPath -verbosity:Info }
+    $reportTypes = "Html;Badges"
+    Exec { & $reportGeneratorExePath -reports:$coverageResultsPath -reporttypes:$reportTypes -targetdir:$coverageReportPath -verbosity:Info }
+
+    if ($CoverageBadgeUploadToken) {
+        Write-Host "Uploading coverage badges ..."
+
+        $escapedBranchName = $BranchName -replace "\W","_"
+        $badgeDirName = [System.IO.Path]::GetFileNameWithoutExtension($SolutionFilePath)
+
+        UploadToDropbox $CoverageBadgeUploadToken (Join-Path $coverageReportPath "badge_linecoverage.svg")   "/$badgeDirName/$escapedBranchName-linecoverage.svg"
+        UploadToDropbox $CoverageBadgeUploadToken (Join-Path $coverageReportPath "badge_branchcoverage.svg") "/$badgeDirName/$escapedBranchName-branchcoverage.svg"
+    }
+}
+
+function UploadToDropbox([string] $authToken, [string] $localFilePath, [string] $dropboxFilePath) {
+    Add-Type -AssemblyName "System.Net.Http"
+    $httpClient = New-Object System.Net.Http.HttpClient
+    $fileStream = [System.IO.File]::Open($localFilePath, [System.IO.FileMode]::Open)
+    
+    $content = New-Object System.Net.Http.StreamContent -ArgumentList $fileStream
+    
+    $httpClient.DefaultRequestHeaders.Authorization = `
+        New-Object System.Net.Http.Headers.AuthenticationHeaderValue -ArgumentList "Bearer", $authToken
+    
+    $content.Headers.ContentType = New-Object System.Net.Http.Headers.MediaTypeHeaderValue -ArgumentList "application/octet-stream"
+    $content.Headers.Add("Dropbox-API-Arg", "{ ""path"":""$dropboxFilePath"", ""mode"" : {"".tag"" : ""overwrite""} }")
+
+    Write-Host "Uploading '$localFilePath' to '$dropboxFilePath' ..."
+    $response = $httpClient.PostAsync("https://content.dropboxapi.com/2/files/upload", $content).Result
+    [void] $response.EnsureSuccessStatusCode()
+    
+    $response.Dispose()
+    $content.Dispose()
+    $fileStream.Dispose()
+    $httpClient.Dispose()
 }
 
 function CalcNuGetPackageVersion([string] $reSharperVersion) {
