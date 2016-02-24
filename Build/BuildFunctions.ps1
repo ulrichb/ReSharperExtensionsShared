@@ -34,17 +34,23 @@ function _ReplaceVersionAtributeValue($fileText, $attributeIdentifier, $value) {
 
 function Test() {
     Write-Host "Running tests ..."
-    $nunitExePath = Join-Path (GetSolutionPackagePath "NUnit.Runners") tools\$NUnitExecutable
-    if ($env:APPVEYOR) { $nunitExePath = $NUnitExecutable }
-
+    $nunitExePath = Join-Path (GetSolutionPackagePath "NUnit.Console") tools\nunit3-console.exe
     $testResultsPath = Join-Path $BuildOutputPath "TestResult.xml"
 
-    $nunitArgs = "$NUnitTestAssemblyPaths /nologo /noshadow /framework=$NUnitFrameworkVersion /domain=Multiple /labels /result=$testResultsPath"
+    $nunitArgs = "$NUnitTestAssemblyPaths --result=$testResultsPath $NUnitAdditionalArgs"
 
     $openCoverExePath = Join-Path (GetSolutionPackagePath "OpenCover") tools\OpenCover.Console.exe
     $coverageResultsPath = Join-Path $BuildOutputPath "TestCoverage.xml"
 
-    Exec { & $openCoverExePath -target:$nunitExePath "-targetargs:$nunitArgs" "-filter:$TestCoverageFilter" "-excludebyattribute:*.ExcludeFromCodeCoverage*" -returntargetcode -register:user -output:$coverageResultsPath }
+    Exec { 
+        & $openCoverExePath -target:$nunitExePath "-targetargs:$nunitArgs" "-filter:$TestCoverageFilter" "-excludebyattribute:*.ExcludeFromCodeCoverage*" -returntargetcode -register:user -output:$coverageResultsPath
+
+        if ($env:APPVEYOR) { 
+            Write-Host "Publishing NUnit results '$testResultsPath' ..."
+            $webClient = New-Object System.Net.WebClient
+            $webClient.UploadFile("https://ci.appveyor.com/api/testresults/nunit3/$($env:APPVEYOR_JOB_ID)", $testResultsPath)
+        }
+    }
 
     $reportGeneratorExePath = Join-Path (GetSolutionPackagePath "ReportGenerator") tools\ReportGenerator.exe
     $coverageReportPath = Join-Path $BuildOutputPath "TestCoverage"
