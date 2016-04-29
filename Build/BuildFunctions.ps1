@@ -34,7 +34,7 @@ function _ReplaceVersionAtributeValue($fileText, $attributeIdentifier, $value) {
 
 function Test() {
     Write-Host "Running tests ..."
-    $nunitExePath = Join-Path (GetSolutionPackagePath "NUnit.Console") tools\nunit3-console.exe
+    $nunitExePath = Join-Path (GetSolutionPackagePath "NUnit.ConsoleRunner") tools\nunit3-console.exe
     $testResultsPath = Join-Path $BuildOutputPath "TestResult.xml"
 
     $nunitArgs = "$NUnitTestAssemblyPaths --result=$testResultsPath $NUnitAdditionalArgs"
