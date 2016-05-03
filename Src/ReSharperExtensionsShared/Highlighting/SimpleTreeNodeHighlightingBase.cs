@@ -15,7 +15,7 @@ namespace ReSharperExtensionsShared.Highlighting
             _toolTipText = toolTipText;
         }
 
-        [NotNull]
+        [NotNull, PublicAPI]
         public T TreeNode { get; }
 
         public string ToolTip => _toolTipText;
