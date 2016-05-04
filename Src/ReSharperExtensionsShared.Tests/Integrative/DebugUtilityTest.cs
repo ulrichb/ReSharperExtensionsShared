@@ -15,7 +15,7 @@ namespace ReSharperExtensionsShared.Tests.Integrative
     [TestFixture]
     public class DebugUtilityTest : BaseTestWithSingleProject
     {
-        protected override string RelativeTestDataPath => typeof (DebugUtilityTest).Name;
+        protected override string RelativeTestDataPath => typeof(DebugUtilityTest).Name;
 
         [Test]
         public void FormatIncludingContext()
