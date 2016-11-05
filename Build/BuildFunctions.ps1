@@ -54,7 +54,7 @@ function Test() {
 
     $reportGeneratorExePath = Join-Path (GetSolutionPackagePath "ReportGenerator") tools\ReportGenerator.exe
     $coverageReportPath = Join-Path $BuildOutputPath "TestCoverage"
-    $reportTypes = "Html;Badges"
+    $reportTypes = "HTML;MHTML;Badges"
     Exec { & $reportGeneratorExePath -reports:$coverageResultsPath -reporttypes:$reportTypes -targetdir:$coverageReportPath -verbosity:Info }
 
     if ($CoverageBadgeUploadToken) {
