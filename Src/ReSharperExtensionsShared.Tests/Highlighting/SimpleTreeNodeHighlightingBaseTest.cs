@@ -42,12 +42,6 @@ namespace ReSharperExtensionsShared.Tests.Highlighting
         }
 
         [Test]
-        public void NavigationOffsetPatch()
-        {
-            Assert.That(_sut.NavigationOffsetPatch, Is.EqualTo(0));
-        }
-
-        [Test]
         public void IsValid_WithInvalidTreeNode()
         {
             A.CallTo(() => _fakeTreeNode.IsValid()).Returns(false);

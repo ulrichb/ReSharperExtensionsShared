@@ -22,7 +22,6 @@ namespace ReSharperExtensionsShared.Highlighting
 
         public string ErrorStripeToolTip => _toolTipText;
 
-        public int NavigationOffsetPatch => 0;
 
         public bool IsValid()
         {
