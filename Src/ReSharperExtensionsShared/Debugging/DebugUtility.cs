@@ -35,7 +35,7 @@ namespace ReSharperExtensionsShared.Debugging
 
         public static string FormatWithElapsed([NotNull] string message, [NotNull] Stopwatch stopwatch)
         {
-            return message + " took " + Math.Round(stopwatch.Elapsed.TotalMilliseconds*1000) + " usec";
+            return message + " took " + Math.Round(stopwatch.Elapsed.TotalMilliseconds * 1000) + " usec";
         }
     }
 }
