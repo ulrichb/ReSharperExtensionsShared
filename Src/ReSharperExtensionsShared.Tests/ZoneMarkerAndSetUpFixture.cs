@@ -6,6 +6,8 @@ using JetBrains.TestFramework.Application.Zones;
 using NUnit.Framework;
 using ReSharperExtensionsShared.Tests;
 
+[assembly: RequiresSTA]
+
 namespace ReSharperExtensionsShared.Tests
 {
     [ZoneDefinition]
