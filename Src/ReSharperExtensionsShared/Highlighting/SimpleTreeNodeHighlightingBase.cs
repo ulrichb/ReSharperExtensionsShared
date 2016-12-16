@@ -7,21 +7,18 @@ namespace ReSharperExtensionsShared.Highlighting
 {
     public abstract class SimpleTreeNodeHighlightingBase<T> : IHighlighting where T : ITreeNode
     {
-        private readonly string _toolTipText;
-
         protected SimpleTreeNodeHighlightingBase([NotNull] T treeNode, [NotNull] string toolTipText)
         {
             TreeNode = treeNode;
-            _toolTipText = toolTipText;
+            ToolTip = toolTipText;
         }
 
         [NotNull, PublicAPI]
         public T TreeNode { get; }
 
-        public string ToolTip => _toolTipText;
+        public string ToolTip { get; }
 
-        public string ErrorStripeToolTip => _toolTipText;
-
+        public string ErrorStripeToolTip => ToolTip;
 
         public bool IsValid()
         {
