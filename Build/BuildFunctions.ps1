@@ -6,6 +6,7 @@ function Clean() {
 function PackageRestore() {
     Write-Host "Restoring packages ..."
     Exec { & $NugetExecutable restore $SolutionFilePath }
+    Exec { & $MSBuildPath $SolutionFilePath /v:m /maxcpucount /t:Restore }
 }
 
 function Build() {
@@ -124,9 +125,9 @@ function NugetPush() {
 }
 
 function GetSolutionPackagePath([string] $packageId) {
-    [xml] $xml = Get-Content "packages.config"
-    $version = $xml.SelectNodes("/packages/package[@id = '$packageId']/@version") | Select -ExpandProperty Value
-    return Join-Path "packages" "$packageId.$version"
+    [xml] $xml = Get-Content "SolutionItems.csproj"
+    $version = $xml.SelectNodes("/Project/ItemGroup/PackageReference[@Include = '$packageId']/@Version") | Select -ExpandProperty Value
+    return [System.IO.Path]::Combine(${env:USERPROFILE}, ".nuget", "packages", "$packageId", "$version")
 }
 
 function Exec([scriptblock] $cmd) {
