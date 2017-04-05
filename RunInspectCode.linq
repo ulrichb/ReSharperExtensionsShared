@@ -34,23 +34,27 @@ async Task Main(string workingDirectory = @"", string testSolutionPath = @"")
     ExecuteInspectCode(inspectCodeDirectory, testSolutionPath, inspectCodeCachePath, resultFilePostFix: "_WoExt");
     ExecuteInspectCode(inspectCodeDirectory, testSolutionPath, inspectCodeCachePath, latestBuiltNugetPackagePath, resultFilePostFix: "_WExt");
 
-    //    PerformanceTest(inspectCodeDirectory, latestBuiltNugetPackagePath, testSolutionPath, inspectCodeCachePath);
+    //PerformanceTest(inspectCodeDirectory, latestBuiltNugetPackagePath, testSolutionPath, inspectCodeCachePath);
 }
 
 void PerformanceTest(string inspectCodeDirectory, string latestBuiltNugetPackagePath, string testSolutionPath, string inspectCodeCachePath)
 {
-    var numberOfPerformanceRuns = 2;
+    var numberOfPerformanceRuns = 6;
 
     string cachePath = inspectCodeCachePath;
 
-    $"Run #{1} (no cache, no ext): {ExecuteInspectCode(inspectCodeDirectory, testSolutionPath, cachePath, resultFilePostFix: $"_1")}".Dump();
+    for (int i = 1; i <= (numberOfPerformanceRuns / 2); i++)
+        $"Run #{i} (no cache, no ext): {ExecuteInspectCode(inspectCodeDirectory, testSolutionPath, cachePath, resultFilePostFix: $"_{i}")}".Dump();
 
-    for (int i = 2; i <= numberOfPerformanceRuns; i++)
+    for (int i = (numberOfPerformanceRuns / 2) + 1; i <= numberOfPerformanceRuns; i++)
         $"Run #{i} (cache, no ext): {ExecuteInspectCode(inspectCodeDirectory, testSolutionPath, cachePath, resultFilePostFix: $"_{i}", cleanCache: false)}".Dump();
 
-    $"Run #{1} (no cache, ext): {ExecuteInspectCode(inspectCodeDirectory, testSolutionPath, cachePath, latestBuiltNugetPackagePath, "_ext_1")}".Dump();
+    //
 
-    for (int i = 2; i <= numberOfPerformanceRuns; i++)
+    for (int i = 1; i <= (numberOfPerformanceRuns / 2); i++)
+        $"Run #{i} (no cache, ext): {ExecuteInspectCode(inspectCodeDirectory, testSolutionPath, cachePath, latestBuiltNugetPackagePath, $"_ext_{i}")}".Dump();
+
+    for (int i = (numberOfPerformanceRuns / 2) + 1; i <= numberOfPerformanceRuns; i++)
         $"Run #{i} (cache, ext): {ExecuteInspectCode(inspectCodeDirectory, testSolutionPath, cachePath, latestBuiltNugetPackagePath, $"_ext_{i}", cleanCache: false)}".Dump();
 }
 
