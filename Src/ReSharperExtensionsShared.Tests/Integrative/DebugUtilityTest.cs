@@ -13,6 +13,7 @@ using ReSharperExtensionsShared.Debugging;
 namespace ReSharperExtensionsShared.Tests.Integrative
 {
     [TestFixture]
+    [TestNetFramework4]
     public class DebugUtilityTest : BaseTestWithSingleProject
     {
         protected override string RelativeTestDataPath => typeof(DebugUtilityTest).Name;
