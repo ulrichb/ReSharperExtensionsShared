@@ -93,7 +93,8 @@ function UploadToDropbox([string] $authToken, [string] $localFilePath, [string] 
 }
 
 function CalcNuGetPackageVersion([string] $reSharperVersion) {
-    return $Version -Replace "(\d+\.\d+\.\d+\.)\d+","`${1}$reSharperVersion"
+    $reSharperVersionInNuGetVersion = $reSharperVersion.Substring($reSharperVersion.Length - 4)
+    return $Version -Replace "^(\d+\.\d+\.\d+\.\d+)","`${1}$reSharperVersionInNuGetVersion"
 }
 
 function NugetPack() {
