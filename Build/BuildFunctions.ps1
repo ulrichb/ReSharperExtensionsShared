@@ -101,6 +101,8 @@ function NugetPack() {
     Write-Host "Injecting release notes text into .nuspec ..."
 
     $releaseNotesText = [System.IO.File]::ReadAllText("History.md")
+    $releaseNotesText = ([Regex]::Matches($releaseNotesText, '(?s)(###.+?###.+?)(?=###|$)').Captures | Select -First 10) -Join ''
+
     $savedNuspecText = [System.IO.File]::ReadAllText($NuspecPath)
 
     [xml] $nuspecXml = Get-Content $NuspecPath
