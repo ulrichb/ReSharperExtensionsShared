@@ -6,7 +6,7 @@ function Clean() {
 function PackageRestore() {
     Write-Host "Restoring packages ..."
     Exec { & $NugetExecutable restore $SolutionFilePath }
-    Exec { & $MSBuildPath $SolutionFilePath /v:m /maxcpucount /t:Restore }
+    Exec { & $MSBuildPath $SolutionFilePath /v:m /maxcpucount /nr:false /t:Restore }
 }
 
 function Build() {
@@ -21,7 +21,7 @@ function Build() {
 
     try {
         Write-Host "Running MSBuild for solution ..."
-        Exec { & $MSBuildPath $SolutionFilePath /v:m /maxcpucount /t:Build "/p:Configuration=$Configuration;TreatWarningsAsErrors=True" }
+        Exec { & $MSBuildPath $SolutionFilePath /v:m /maxcpucount /nr:false /t:Build "/p:Configuration=$Configuration;TreatWarningsAsErrors=True" }
 
     } finally {
         [System.IO.File]::WriteAllText($AssemblyVersionFilePath, $savedAssemblyVersionFileText)
