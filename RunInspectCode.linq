@@ -24,12 +24,13 @@ async Task Main(string workingDirectory = @"", string testSolutionPath = @"")
     var latestBuiltNugetPackagePath = Directory.EnumerateFiles(outputDir, "*.nupkg").OrderByDescending(x => x).First();
     Console.WriteLine($"Package to test: {latestBuiltNugetPackagePath}");
 
-    var latestBuiltNugetPackagePathMatch = Regex.Match(latestBuiltNugetPackagePath, @"\.(\d{4})(\d)");
+    var latestBuiltNugetPackageFourthVersionPart = int.Parse(Regex.Match(latestBuiltNugetPackagePath, @"(\d+\.){3}(\d+)").Groups[2].Value);
+    var latestBuiltNugetPackageReSharperVersion = (Major: 2000 + (latestBuiltNugetPackageFourthVersionPart / 10) % 100, Minor: latestBuiltNugetPackageFourthVersionPart % 10);
 
     var inspectCodeDirectory = await InstallCommandLineToolsPackage(
         commandLineToolsPackageId,
-        from: NuGetVersion.Parse(latestBuiltNugetPackagePathMatch.Groups[1].Value + "." + latestBuiltNugetPackagePathMatch.Groups[2].Value),
-        toExclusive: NuGetVersion.Parse(latestBuiltNugetPackagePathMatch.Groups[1].Value + "." + (int.Parse(latestBuiltNugetPackagePathMatch.Groups[2].Value) + 1)));
+        fromExclusive: new NuGetVersion(latestBuiltNugetPackageReSharperVersion.Major, latestBuiltNugetPackageReSharperVersion.Minor - 1, 0),
+        toExclusive: new NuGetVersion(latestBuiltNugetPackageReSharperVersion.Major, latestBuiltNugetPackageReSharperVersion.Minor, int.MaxValue));
 
     ExecuteInspectCode(inspectCodeDirectory, testSolutionPath, inspectCodeCachePath, resultFilePostFix: "_WoExt");
     ExecuteInspectCode(inspectCodeDirectory, testSolutionPath, inspectCodeCachePath, latestBuiltNugetPackagePath, resultFilePostFix: "_WExt");
@@ -82,7 +83,7 @@ TimeSpan ExecuteInspectCode(string inspectCodeDirectory, string solutionPath, st
         return execute();
 }
 
-static async Task<string> InstallCommandLineToolsPackage(string packageId, NuGetVersion from, NuGetVersion toExclusive)
+static async Task<string> InstallCommandLineToolsPackage(string packageId, NuGetVersion fromExclusive, NuGetVersion toExclusive)
 {
     using (var httpClient = new HttpClient())
     {
@@ -93,7 +94,7 @@ static async Task<string> InstallCommandLineToolsPackage(string packageId, NuGet
             var resultJson = JObject.Parse(await versionResponse.EnsureSuccessStatusCode().Content.ReadAsStringAsync());
 
             var packageVersions = resultJson["versions"].Select(x => NuGetVersion.Parse((string)x)).OrderByDescending(x => x);
-            var filteredPackageVersions = packageVersions.Where(v => from <= v && v < toExclusive);
+            var filteredPackageVersions = packageVersions.Where(v => fromExclusive < v && v < toExclusive);
             packageVersion = filteredPackageVersions.First();
         }
 
@@ -105,7 +106,6 @@ static async Task<string> InstallCommandLineToolsPackage(string packageId, NuGet
         }
         else
         {
-
             var packageDownloadUrl = $"https://api.nuget.org/v3-flatcontainer/{packageId}/{packageVersion}/{packageId}.{packageVersion}.nupkg";
             Console.WriteLine($"Requesting '{packageDownloadUrl}' ...");
 
