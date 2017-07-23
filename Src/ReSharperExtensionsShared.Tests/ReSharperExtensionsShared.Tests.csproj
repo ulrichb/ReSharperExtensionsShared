@@ -29,8 +29,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="FakeItEasy" Version="3.2.0" />
-    <PackageReference Include="JetBrains.ReSharper.SDK.Tests" Version="2017.1.20170407.131329" />
+    <PackageReference Include="FakeItEasy" Version="3.4.2" />
+    <PackageReference Include="JetBrains.ReSharper.SDK.Tests" Version="2017.1.20170613.162448" />
   </ItemGroup>
 
   <ItemGroup>
