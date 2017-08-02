@@ -1,5 +1,4 @@
 ﻿using FakeItEasy;
-using JetBrains.Annotations;
 using JetBrains.DocumentModel;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.ExtensionsAPI.Tree;
@@ -20,7 +19,7 @@ namespace ReSharperExtensionsShared.Tests.Highlighting
         public void SetUp()
         {
             _fakeTreeNode = A.Fake<ITreeNode>();
-            _sut = new TestImplicitNullabilityHighlighting(_fakeTreeNode, "ToolTipText");
+            _sut = new TestHighlighting(_fakeTreeNode, "ToolTipText");
         }
 
         [Test]
@@ -81,9 +80,9 @@ namespace ReSharperExtensionsShared.Tests.Highlighting
             Assert.That(result, Is.EqualTo(new DocumentRange(fakeDocument, new TextRange(42, 10))));
         }
 
-        private class TestImplicitNullabilityHighlighting : SimpleTreeNodeHighlightingBase<ITreeNode>
+        private class TestHighlighting : SimpleTreeNodeHighlightingBase<ITreeNode>
         {
-            public TestImplicitNullabilityHighlighting([NotNull] ITreeNode treeNode, [NotNull] string toolTipText)
+            public TestHighlighting(ITreeNode treeNode, string toolTipText)
                 : base(treeNode, toolTipText)
             {
             }
