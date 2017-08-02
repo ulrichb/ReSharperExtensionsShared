@@ -16,8 +16,6 @@ namespace ReSharperExtensionsShared.Tests.Integrative
     [TestNetFramework4]
     public class DebugUtilityTest : BaseTestWithSingleProject
     {
-        protected override string RelativeTestDataPath => typeof(DebugUtilityTest).Name;
-
         [Test]
         public void FormatIncludingContext()
         {
@@ -64,12 +62,15 @@ namespace ReSharperExtensionsShared.Tests.Integrative
 
         private void UsingClassInFile(string fileName, Action<IClass> action)
         {
-            WithSingleProject(GetTestDataFilePath2(fileName).FullPath,
+            var filePath = GetTestDataFilePath2(fileName).FullPath;
+
+            WithSingleProject(
+                filePath,
                 (lifetime, solution, project) => RunGuarded(() =>
                 {
                     var primaryPsiFile = project.GetAllProjectFiles().Single().GetPrimaryPsiFile().NotNull();
 
-                    var classElement = (IClass) primaryPsiFile.ThisAndDescendants<IClassDeclaration>().Collect().Single().DeclaredElement.NotNull();
+                    var classElement = (IClass) primaryPsiFile.Descendants<IClassDeclaration>().ToEnumerable().Single().DeclaredElement.NotNull();
 
                     action(classElement);
                 }));
