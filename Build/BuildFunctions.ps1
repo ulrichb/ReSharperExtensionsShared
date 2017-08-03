@@ -10,27 +10,14 @@ function PackageRestore() {
 }
 
 function Build() {
-    Write-Host "Updating version to '$Version' in '$AssemblyVersionFilePath' ..."
-    $versionWithoutPostfix = $Version -Replace "-\w+$",""
-    $assemblyVersionFileText = [System.IO.File]::ReadAllText($AssemblyVersionFilePath)
-    $savedAssemblyVersionFileText = $assemblyVersionFileText
-    $assemblyVersionFileText = _ReplaceVersionAtributeValue $assemblyVersionFileText "AssemblyVersion" $versionWithoutPostfix
-    $assemblyVersionFileText = _ReplaceVersionAtributeValue $assemblyVersionFileText "AssemblyFileVersion" $versionWithoutPostfix
-    $assemblyVersionFileText = _ReplaceVersionAtributeValue $assemblyVersionFileText "AssemblyInformationalVersion" $Version
-    [System.IO.File]::WriteAllText($AssemblyVersionFilePath, $assemblyVersionFileText)
+    Write-Host "Full version: '$(GetFullVersion)'"
 
-    try {
-        Write-Host "Running MSBuild for solution ..."
-        Exec { & $MSBuildPath $SolutionFilePath /v:m /maxcpucount /nr:false /t:Build "/p:Configuration=$Configuration;TreatWarningsAsErrors=True" }
+    $versionParameters = "AssemblyVersion=$Version;FileVersion=$Version;InformationalVersion=$(GetFullVersion)"
 
-    } finally {
-        [System.IO.File]::WriteAllText($AssemblyVersionFilePath, $savedAssemblyVersionFileText)
-    }
-}
+    $msBuildParameters = "Configuration=$Configuration;TreatWarningsAsErrors=True;$versionParameters"
 
-function _ReplaceVersionAtributeValue($fileText, $attributeIdentifier, $value) {
-    Write-Host "Replacing '$attributeIdentifier' attribute value with '$value' ..."
-    return $fileText -Replace "(\[assembly:\s*$attributeIdentifier\s*)\([^)]+\)","`${1}(`"$value`")"
+    Write-Host "Running MSBuild for solution ..."
+    Exec { & $MSBuildPath $SolutionFilePath /v:m /maxcpucount /nr:false /t:Rebuild "/p:$msBuildParameters" }
 }
 
 function Test() {
@@ -94,7 +81,12 @@ function UploadToDropbox([string] $authToken, [string] $localFilePath, [string] 
 
 function CalcNuGetPackageVersion([string] $reSharperVersion) {
     $reSharperVersionInNuGetVersion = $reSharperVersion.Substring($reSharperVersion.Length - 4)
-    return $Version -Replace "^(\d+\.\d+\.\d+\.\d+)","`${1}$reSharperVersionInNuGetVersion"
+    return (GetFullVersion) -Replace "^(\d+\.\d+\.\d+\.\d+)","`${1}$reSharperVersionInNuGetVersion"
+}
+
+function GetFullVersion() {
+    if (-not $BranchName) { return "$Version-local" }
+    if ($BranchName -eq "master") { return "$Version" } else { return "$Version-pre" }
 }
 
 function NugetPack() {
