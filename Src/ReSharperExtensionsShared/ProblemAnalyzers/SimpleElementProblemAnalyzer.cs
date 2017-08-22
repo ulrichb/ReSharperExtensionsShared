@@ -20,6 +20,7 @@ namespace ReSharperExtensionsShared.ProblemAnalyzers
             }
         }
 
+        [PublicAPI]
         protected abstract void Run(
             [NotNull] TDeclaration declaration,
             [NotNull] TDeclaredElement declaredElement,

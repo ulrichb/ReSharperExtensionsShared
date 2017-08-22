@@ -21,14 +21,8 @@ namespace ReSharperExtensionsShared.Highlighting
 
         public string ErrorStripeToolTip => ToolTip;
 
-        public bool IsValid()
-        {
-            return TreeNode.IsValid();
-        }
+        public bool IsValid() => TreeNode.IsValid();
 
-        public virtual DocumentRange CalculateRange()
-        {
-            return TreeNode.GetDocumentRange();
-        }
+        public virtual DocumentRange CalculateRange() => TreeNode.GetDocumentRange();
     }
 }
