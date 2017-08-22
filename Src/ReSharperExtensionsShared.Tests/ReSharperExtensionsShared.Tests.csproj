@@ -4,7 +4,6 @@
     <ReSharperVersionIdentifier>20171</ReSharperVersionIdentifier>
 
     <TargetFramework>net45</TargetFramework>
-    <EnableDefaultItems>false</EnableDefaultItems>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>None</ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>
     <DebugType>full</DebugType> <!-- necessary for OpenCover -->
@@ -21,15 +20,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="**\*.cs" Exclude="obj\**;test\data\**" />
-  </ItemGroup>
-  <ItemGroup>
+    <Compile Remove="test\data\**" />
     <None Include="test\data\**" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="FakeItEasy" Version="4.0.0" />
-    <PackageReference Include="JetBrains.ReSharper.SDK.Tests" Version="2017.1.20170613.162448" />
+    <PackageReference Include="FakeItEasy" Version="4.*" />
+    <PackageReference Include="JetBrains.ReSharper.SDK.Tests" Version="2017.1.*" />
   </ItemGroup>
 
   <ItemGroup>

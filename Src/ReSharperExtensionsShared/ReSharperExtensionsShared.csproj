@@ -4,7 +4,6 @@
     <ReSharperVersionIdentifier>20171</ReSharperVersionIdentifier>
 
     <TargetFramework>net45</TargetFramework>
-    <EnableDefaultItems>false</EnableDefaultItems>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>None</ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>
     <DebugType>full</DebugType> <!-- necessary for OpenCover -->
@@ -21,11 +20,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="**\*.cs" Exclude="obj\**" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="JetBrains.ReSharper.SDK" Version="2017.1.20170613.162448" />
+    <PackageReference Include="JetBrains.ReSharper.SDK" Version="2017.1.*" />
   </ItemGroup>
 
 </Project>
