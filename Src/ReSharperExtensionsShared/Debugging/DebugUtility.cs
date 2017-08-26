@@ -14,9 +14,7 @@ namespace ReSharperExtensionsShared.Debugging
 
             var result = element.GetType().Name + " '" + element.ShortName + "'";
 
-            var clrDeclaredElement = element as IClrDeclaredElement;
-
-            if (clrDeclaredElement != null)
+            if (element is IClrDeclaredElement clrDeclaredElement)
             {
                 var containingType = clrDeclaredElement.GetContainingType();
                 var containingTypeName = containingType == null ? "NULL" : containingType.GetClrName().FullName;
