@@ -11,7 +11,7 @@
   <Namespace>System.Threading.Tasks</Namespace>
 </Query>
 
-async Task Main(string workingDirectory = @"", string testSolutionPath = @"")
+async Task Main(string workingDirectory = @"C:\Temp\InspectCodeTests\", string testSolutionPath = @"")
 {
     var scriptDir = Path.GetDirectoryName(Util.CurrentQueryPath);
     var solutionDir = Path.Combine(scriptDir, "..");
