@@ -1,6 +1,7 @@
 function Clean() {
     New-Item $BuildOutputPath -Type Directory -Force | Out-Null
     Remove-Item $BuildOutputPath\* -Recurse -Force
+    if (Test-Path "$RiderPluginProject\build\distributions\") { Remove-Item "$RiderPluginProject\build\distributions\" -Recurse -Force }
 }
 
 function PackageRestore() {
@@ -92,13 +93,10 @@ function GetFullVersion() {
 function NugetPack() {
     Write-Host "Injecting release notes text into .nuspec ..."
 
-    $releaseNotesText = [System.IO.File]::ReadAllText("History.md")
-    $releaseNotesText = ([Regex]::Matches($releaseNotesText, '(?s)(###.+?###.+?)(?=###|$)').Captures | Select -First 10) -Join ''
-
-    $savedNuspecText = [System.IO.File]::ReadAllText($NuspecPath)
+    $savedNuspecContent = [System.IO.File]::ReadAllText($NuspecPath)
 
     [xml] $nuspecXml = Get-Content $NuspecPath
-    $nuspecXml.package.metadata.releaseNotes = $releaseNotesText
+    $nuspecXml.package.metadata.releaseNotes = GetReleaseNotesText
     $nuspecXml.Save($NuspecPath)
 
     Write-Host "Creating NuGet packages ..."
@@ -108,13 +106,24 @@ function NugetPack() {
             Exec { & $NugetExecutable pack $NuspecPath -Properties $_ -OutputDirectory $BuildOutputPath -NoPackageAnalysis }
         }
     } finally {
-        [System.IO.File]::WriteAllText($NuspecPath, $savedNuspecText)
+        [System.IO.File]::WriteAllText($NuspecPath, $savedNuspecContent)
     }
+}
+
+function BuildRiderPlugin() {
+    Exec { & "$RiderPluginProject\gradlew" -p $RiderPluginProject "buildPlugin" "-Pversion=$(GetFullVersion)" "-Pconfiguration=$Configuration" }
+    Copy-Item "$RiderPluginProject\build\distributions\*.zip" $BuildOutputPath
+}
+
+function GetReleaseNotesText() {
+    $releaseNotesText = [System.IO.File]::ReadAllText("History.md")
+    $releaseNotesText = ([Regex]::Matches($releaseNotesText, '(?s)(###.+?###.+?)(?=###|$)').Captures | Select -First 10) -Join ''
+    return $releaseNotesText
 }
 
 function NugetPush() {
     Write-Host "Pushing NuGet packages ..."
-    gci (Join-Path $BuildOutputPath "*.nupkg") | % {
+    Get-ChildItem (Join-Path $BuildOutputPath "*.nupkg") | % {
         Exec { & $NugetExecutable push $_ $NugetPushKey -Source $NugetPushServer }
     }
 }
@@ -127,6 +136,7 @@ function GetSolutionPackagePath([string] $packageId) {
 
 function Exec([scriptblock] $cmd) {
     & $cmd
+
     if ($LastExitCode -ne 0) {
         throw "The following call failed with exit code $LastExitCode. '$cmd'"
     }
