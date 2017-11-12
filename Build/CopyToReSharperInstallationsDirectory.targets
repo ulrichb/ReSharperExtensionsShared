@@ -15,7 +15,7 @@
     <Message Condition="@(ReSharperInstallationsSubDirectories) != ''" Text="Copy to installation dirs ..." Importance="High" />
     <Message Condition="@(ReSharperInstallationsSubDirectories) != ''" Text="%(ReSharperInstallationsSubDirectories.Identity)" Importance="High" />
     <Copy Condition="@(ReSharperInstallationsSubDirectories) != ''"
-          SourceFiles="@(MainAssembly);@(AdditionalFilesForReSharperInstallationsDirectory)"
+          SourceFiles="@(MainAssembly);@(_DebugSymbolsOutputPath);@(AdditionalFilesForReSharperInstallationsDirectory)"
           DestinationFolder="%(ReSharperInstallationsSubDirectories.Identity)" />
   </Target>
 
