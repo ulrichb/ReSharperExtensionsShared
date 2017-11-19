@@ -1,7 +1,9 @@
 function Clean() {
     New-Item $BuildOutputPath -Type Directory -Force | Out-Null
     Remove-Item $BuildOutputPath\* -Recurse -Force
-    if (Test-Path "$RiderPluginProject\build\distributions\") { Remove-Item "$RiderPluginProject\build\distributions\" -Recurse -Force }
+    if (Test-Path variable:global:RiderPluginProject) {
+        if (Test-Path "$RiderPluginProject\build\distributions\") { Remove-Item "$RiderPluginProject\build\distributions\" -Recurse -Force }
+    }
 }
 
 function PackageRestore() {
