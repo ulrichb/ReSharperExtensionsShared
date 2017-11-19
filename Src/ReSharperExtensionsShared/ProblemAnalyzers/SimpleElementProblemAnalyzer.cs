@@ -1,8 +1,11 @@
 ﻿using JetBrains.Annotations;
-using JetBrains.ReSharper.Daemon.Stages.Dispatcher;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.Tree;
+
+#if RS20172 || RD20172
+using JetBrains.ReSharper.Daemon.Stages.Dispatcher;
+#endif
 
 namespace ReSharperExtensionsShared.ProblemAnalyzers
 {
