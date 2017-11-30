@@ -23,9 +23,9 @@ namespace ReSharperExtensionsShared.Tests.Highlighting
         }
 
         [Test]
-        public void TreeNode()
+        public void HighlightingNode()
         {
-            Assert.That(_sut.TreeNode, Is.EqualTo(_fakeTreeNode));
+            Assert.That(_sut.HighlightingNode, Is.EqualTo(_fakeTreeNode));
         }
 
         [Test]
@@ -82,8 +82,8 @@ namespace ReSharperExtensionsShared.Tests.Highlighting
 
         private class TestHighlighting : SimpleTreeNodeHighlightingBase<ITreeNode>
         {
-            public TestHighlighting(ITreeNode treeNode, string toolTipText)
-                : base(treeNode, toolTipText)
+            public TestHighlighting(ITreeNode highlightingNode, string toolTipText)
+                : base(highlightingNode, toolTipText)
             {
             }
         }

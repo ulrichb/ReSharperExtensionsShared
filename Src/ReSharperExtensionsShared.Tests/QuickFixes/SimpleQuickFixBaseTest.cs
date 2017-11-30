@@ -80,7 +80,7 @@ namespace ReSharperExtensionsShared.Tests.QuickFixes
         [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
         public class TestHighlighting : SimpleTreeNodeHighlightingBase<ITreeNode>
         {
-            public TestHighlighting(ITreeNode treeNode) : base(treeNode, "don't care")
+            public TestHighlighting(ITreeNode highlightingNode) : base(highlightingNode, "don't care")
             {
             }
         }

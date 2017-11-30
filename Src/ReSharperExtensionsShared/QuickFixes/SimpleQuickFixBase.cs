@@ -29,6 +29,6 @@ namespace ReSharperExtensionsShared.QuickFixes
         [PublicAPI]
         protected abstract bool IsAvailableForTreeNode([NotNull] IUserDataHolder cache);
 
-        private bool IsTreeNodeValid => ValidUtils.Valid(Highlighting.TreeNode);
+        private bool IsTreeNodeValid => ValidUtils.Valid(Highlighting.HighlightingNode);
     }
 }
