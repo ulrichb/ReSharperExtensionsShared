@@ -10,7 +10,7 @@ using JetBrains.Util;
 using NUnit.Framework;
 using ReSharperExtensionsShared.Debugging;
 
-namespace ReSharperExtensionsShared.Tests.Integrative
+namespace ReSharperExtensionsShared.Tests.Debugging
 {
     [TestFixture]
     [TestNetFramework4]
