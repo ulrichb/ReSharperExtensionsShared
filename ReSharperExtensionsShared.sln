@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26403.3
+VisualStudioVersion = 15.0.27004.2010
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{4998CFBC-6ECF-4D29-954C-CF020091308E}"
 	ProjectSection(SolutionItems) = preProject
@@ -13,7 +13,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		LICENSE = LICENSE
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReSharperExtensionsShared", "Src\ReSharperExtensionsShared\ReSharperExtensionsShared.csproj", "{2EC72DFB-257C-4156-B701-6E2E0378C97B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReSharperExtensionsShared.RS20172", "Src\ReSharperExtensionsShared\ReSharperExtensionsShared.RS20172.csproj", "{2EC72DFB-257C-4156-B701-6E2E0378C97B}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Src", "Src", "{26B55A35-CCB1-4635-871A-EE770850A5F2}"
 EndProject
@@ -22,7 +22,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{2159E662
 		Build\BuildFunctions.ps1 = Build\BuildFunctions.ps1
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReSharperExtensionsShared.Tests", "Src\ReSharperExtensionsShared.Tests\ReSharperExtensionsShared.Tests.csproj", "{60C7BA9F-6157-4747-AA79-9B6731F61856}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReSharperExtensionsShared.Tests.RS20172", "Src\ReSharperExtensionsShared.Tests\ReSharperExtensionsShared.Tests.RS20172.csproj", "{60C7BA9F-6157-4747-AA79-9B6731F61856}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,5 +45,8 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{2EC72DFB-257C-4156-B701-6E2E0378C97B} = {26B55A35-CCB1-4635-871A-EE770850A5F2}
 		{60C7BA9F-6157-4747-AA79-9B6731F61856} = {26B55A35-CCB1-4635-871A-EE770850A5F2}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {0EC27A5D-5C33-4EB6-80AE-5B63185A62FA}
 	EndGlobalSection
 EndGlobal
