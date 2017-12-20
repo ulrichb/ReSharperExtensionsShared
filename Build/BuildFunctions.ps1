@@ -18,9 +18,10 @@ function Build() {
     $versionParameters = "AssemblyVersion=$Version;FileVersion=$Version;InformationalVersion=$(GetFullVersion)"
 
     $msBuildParameters = "Configuration=$Configuration;TreatWarningsAsErrors=True;$versionParameters"
+    $additionalArgs = if (Test-Path variable:global:MSBuildAdditionalArgs) { $MSBuildAdditionalArgs } else { "" }
 
     Write-Host "Running MSBuild for solution ..."
-    Exec { & $MSBuildPath $SolutionFilePath /v:m /maxcpucount /nr:false /t:Rebuild "/p:$msBuildParameters" }
+    Exec { & $MSBuildPath $SolutionFilePath /v:m /maxcpucount /nr:false /t:Rebuild "/p:$msBuildParameters" $additionalArgs }
 }
 
 function Test() {
