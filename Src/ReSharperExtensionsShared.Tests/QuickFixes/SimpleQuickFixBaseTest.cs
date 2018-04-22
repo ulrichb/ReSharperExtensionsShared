@@ -10,6 +10,7 @@ using JetBrains.Util;
 using NUnit.Framework;
 using ReSharperExtensionsShared.Highlighting;
 using ReSharperExtensionsShared.QuickFixes;
+using A_ = FakeItEasy.A;
 
 namespace ReSharperExtensionsShared.Tests.QuickFixes
 {
@@ -22,12 +23,12 @@ namespace ReSharperExtensionsShared.Tests.QuickFixes
         {
             Test(sut =>
             {
-                var userDataHolder = A.Fake<IUserDataHolder>();
+                var userDataHolder = A_.Fake<IUserDataHolder>();
 
                 var result = sut.IsAvailable(userDataHolder);
 
                 Assert.That(result, Is.EqualTo(true));
-                A.CallTo(sut).Where(x => x.Method.Name == "IsAvailableForTreeNode")
+                A_.CallTo(sut).Where(x => x.Method.Name == "IsAvailableForTreeNode")
                     .WhenArgumentsMatch((IUserDataHolder x) => ReferenceEquals(x, userDataHolder)).MustHaveHappened();
             });
         }
@@ -39,7 +40,7 @@ namespace ReSharperExtensionsShared.Tests.QuickFixes
                 useNullTreeNode: true,
                 action: sut =>
                 {
-                    var result = sut.IsAvailable(A.Fake<IUserDataHolder>());
+                    var result = sut.IsAvailable(A_.Fake<IUserDataHolder>());
 
                     Assert.That(result, Is.EqualTo(false));
                 });
@@ -50,9 +51,9 @@ namespace ReSharperExtensionsShared.Tests.QuickFixes
         {
             Test(sut =>
             {
-                A.CallTo(sut).Where(x => x.Method.Name == "IsAvailableForTreeNode").WithReturnType<bool>().Returns(false);
+                A_.CallTo(sut).Where(x => x.Method.Name == "IsAvailableForTreeNode").WithReturnType<bool>().Returns(false);
 
-                var result = sut.IsAvailable(A.Fake<IUserDataHolder>());
+                var result = sut.IsAvailable(A_.Fake<IUserDataHolder>());
 
                 Assert.That(result, Is.EqualTo(false));
             });
@@ -68,10 +69,10 @@ namespace ReSharperExtensionsShared.Tests.QuickFixes
 
                     var highlighting = new TestHighlighting(useNullTreeNode ? null : primaryPsiFile);
 
-                    var sut = A.Fake<SimpleQuickFixBase<TestHighlighting, ITreeNode>>(
+                    var sut = A_.Fake<SimpleQuickFixBase<TestHighlighting, ITreeNode>>(
                         o => o.WithArgumentsForConstructor(new[] { highlighting }).CallsBaseMethods());
 
-                    A.CallTo(sut).Where(x => x.Method.Name == "IsAvailableForTreeNode").WithReturnType<bool>().Returns(true);
+                    A_.CallTo(sut).Where(x => x.Method.Name == "IsAvailableForTreeNode").WithReturnType<bool>().Returns(true);
 
                     action(sut);
                 }));

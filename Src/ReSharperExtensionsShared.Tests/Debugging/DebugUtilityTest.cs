@@ -70,7 +70,7 @@ namespace ReSharperExtensionsShared.Tests.Debugging
                 {
                     var primaryPsiFile = project.GetAllProjectFiles().Single().GetPrimaryPsiFile().NotNull();
 
-                    var classElement = (IClass) primaryPsiFile.Descendants<IClassDeclaration>().ToEnumerable().Single().DeclaredElement.NotNull();
+                    var classElement = primaryPsiFile.Descendants<IClassDeclaration>().ToEnumerable().Single().DeclaredElement.NotNull();
 
                     action(classElement);
                 }));

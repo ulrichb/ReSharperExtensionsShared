@@ -1,11 +1,11 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using FakeItEasy;
-using JetBrains.ReSharper.Daemon.Stages.Dispatcher;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.Tree;
 using NUnit.Framework;
 using ReSharperExtensionsShared.ProblemAnalyzers;
+using A_ = FakeItEasy.A;
 
 namespace ReSharperExtensionsShared.Tests.ProblemAnalyzers
 {
@@ -21,11 +21,11 @@ namespace ReSharperExtensionsShared.Tests.ProblemAnalyzers
         [SetUp]
         public void SetUp()
         {
-            _declaration = A.Fake<IDeclaration>();
-            _data = A.Dummy<ElementProblemAnalyzerData>();
-            _consumer = A.Dummy<IHighlightingConsumer>();
+            _declaration = A_.Fake<IDeclaration>();
+            _data = A_.Dummy<ElementProblemAnalyzerData>();
+            _consumer = A_.Dummy<IHighlightingConsumer>();
 
-            _sut = A.Fake<TestProblemAnalyzer>(o => o.CallsBaseMethods());
+            _sut = A_.Fake<TestProblemAnalyzer>(o => o.CallsBaseMethods());
         }
 
         [Test]
@@ -33,17 +33,17 @@ namespace ReSharperExtensionsShared.Tests.ProblemAnalyzers
         {
             ((IElementProblemAnalyzer) _sut).Run(_declaration, _data, _consumer);
 
-            A.CallTo(() => _sut.PublicRun(_declaration, _declaration.DeclaredElement, _data, _consumer)).MustHaveHappened(Repeated.Exactly.Once);
+            A_.CallTo(() => _sut.PublicRun(_declaration, _declaration.DeclaredElement, _data, _consumer)).MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Test]
         public void Run_WithNullDeclaredElement_IsFiltered()
         {
-            A.CallTo(() => _declaration.DeclaredElement).Returns(null);
+            A_.CallTo(() => _declaration.DeclaredElement).Returns(null);
 
             ((IElementProblemAnalyzer) _sut).Run(_declaration, _data, _consumer);
 
-            A.CallTo(_sut).MustNotHaveHappened();
+            A_.CallTo(_sut).MustNotHaveHappened();
         }
 
         // ReSharper disable once MemberCanBePrivate.Global

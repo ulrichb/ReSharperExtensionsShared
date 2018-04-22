@@ -6,6 +6,7 @@ using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.Util;
 using NUnit.Framework;
 using ReSharperExtensionsShared.Highlighting;
+using A_ = FakeItEasy.A;
 
 namespace ReSharperExtensionsShared.Tests.Highlighting
 {
@@ -18,7 +19,7 @@ namespace ReSharperExtensionsShared.Tests.Highlighting
         [SetUp]
         public void SetUp()
         {
-            _fakeTreeNode = A.Fake<ITreeNode>();
+            _fakeTreeNode = A_.Fake<ITreeNode>();
             _sut = new TestHighlighting(_fakeTreeNode, "ToolTipText");
         }
 
@@ -43,7 +44,7 @@ namespace ReSharperExtensionsShared.Tests.Highlighting
         [Test]
         public void IsValid_WithInvalidTreeNode()
         {
-            A.CallTo(() => _fakeTreeNode.IsValid()).Returns(false);
+            A_.CallTo(() => _fakeTreeNode.IsValid()).Returns(false);
 
             Assert.That(_sut.IsValid(), Is.EqualTo(false));
         }
@@ -51,7 +52,7 @@ namespace ReSharperExtensionsShared.Tests.Highlighting
         [Test]
         public void IsValid_WithValidTreeNode()
         {
-            A.CallTo(() => _fakeTreeNode.IsValid()).Returns(true);
+            A_.CallTo(() => _fakeTreeNode.IsValid()).Returns(true);
 
             Assert.That(_sut.IsValid(), Is.EqualTo(true));
         }
@@ -61,15 +62,15 @@ namespace ReSharperExtensionsShared.Tests.Highlighting
         {
             // IDEA: If we get *integrative* highlighting tests, replace this test
 
-            var fakeDocument = A.Fake<IDocument>();
+            var fakeDocument = A_.Fake<IDocument>();
 
-            var fakeFile = A.Fake<IFileImpl>();
-            A.CallTo(() => fakeFile.IsValid()).Returns(true);
-            A.CallTo(() => fakeFile.SecondaryRangeTranslator).Returns(null);
-            A.CallTo(() => fakeFile.DocumentRangeTranslator.Translate(A<TreeTextRange>._))
+            var fakeFile = A_.Fake<IFileImpl>();
+            A_.CallTo(() => fakeFile.IsValid()).Returns(true);
+            A_.CallTo(() => fakeFile.SecondaryRangeTranslator).Returns(null);
+            A_.CallTo(() => fakeFile.DocumentRangeTranslator.Translate(A<TreeTextRange>._))
                 .Returns(new DocumentRange(fakeDocument, new TextRange(42, 10)));
 
-            A.CallTo(() => _fakeTreeNode.GetContainingNode<IFile>(A<bool>._)).Returns(fakeFile);
+            A_.CallTo(() => _fakeTreeNode.GetContainingNode<IFile>(A<bool>._)).Returns(fakeFile);
 
             //
 
