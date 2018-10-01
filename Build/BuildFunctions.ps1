@@ -114,7 +114,7 @@ function NugetPack() {
 }
 
 function BuildRiderPlugin() {
-    Exec { & "$RiderPluginProject\gradlew" -p $RiderPluginProject "buildPlugin" "-Pversion=$(GetFullVersion)" "-Pconfiguration=$Configuration" }
+    Exec { & "$RiderPluginProject\gradlew" --no-daemon -p $RiderPluginProject "buildPlugin" "-Pversion=$(GetFullVersion)" "-Pconfiguration=$Configuration" }
     Copy-Item "$RiderPluginProject\build\distributions\*.zip" $BuildOutputPath
 }
 
