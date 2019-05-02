@@ -121,6 +121,7 @@ function BuildRiderPlugin() {
 function GetReleaseNotesText() {
     $releaseNotesText = [System.IO.File]::ReadAllText("History.md")
     $releaseNotesText = ([Regex]::Matches($releaseNotesText, '(?s)(###.+?###.+?)(?=###|$)').Captures | Select -First 10) -Join ''
+    $releaseNotesText = [Regex]::Replace($releaseNotesText, "\r?\n", "<br/>`n")
     return $releaseNotesText
 }
 
