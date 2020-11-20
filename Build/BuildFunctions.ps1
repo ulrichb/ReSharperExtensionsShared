@@ -138,10 +138,27 @@ function GetSolutionPackagePath([string] $packageId) {
     return [System.IO.Path]::Combine(${env:USERPROFILE}, ".nuget", "packages", "$packageId", "$version")
 }
 
-function Exec([scriptblock] $cmd) {
-    & $cmd
+function Exec {
+    # Modified version of https://mnaoumov.wordpress.com/2015/01/11/execution-of-external-commands-in-powershell-done-right/
 
-    if ($LastExitCode -ne 0) {
-        throw "The following call failed with exit code $LastExitCode. '$cmd'"
+    param
+    (
+        [ScriptBlock] $ScriptBlock,
+        [string] $StderrPrefix = "STDERR: ",
+        [int[]] $AllowedExitCodes = @(0)
+    )
+
+    $backupErrorActionPreference = $script:ErrorActionPreference
+
+    $script:ErrorActionPreference = "Continue"
+    try {
+        & $ScriptBlock 2>&1 | % { if ($_ -is [System.Management.Automation.ErrorRecord]) { "$StderrPrefix$_" } else { "$_" } }
+
+        if ($AllowedExitCodes -notcontains $LASTEXITCODE) {
+            throw "The following call failed with exit code $LastExitCode. '$ScriptBlock'"
+        }
+    }
+    finally {
+        $script:ErrorActionPreference = $backupErrorActionPreference
     }
 }
