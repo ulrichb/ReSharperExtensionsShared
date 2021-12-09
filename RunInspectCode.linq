@@ -69,7 +69,7 @@ TimeSpan ExecuteInspectCode(string inspectCodeDirectory, string solutionPath, st
         var sw = Stopwatch.StartNew();
 
         var inspectCodeExePath = Path.Combine(inspectCodeDirectory, "InspectCode.exe");
-        var inspectCodeArgs = $"--caches-home:\"{cachePath}\" -o:Inspections{resultFilePostFix}.xml \"{solutionPath}\"";
+        var inspectCodeArgs = $"--no-build --caches-home:\"{cachePath}\" -o:Inspections{resultFilePostFix}.xml \"{solutionPath}\"";
 
         //Util.Cmd(inspectCodeExePath, inspectCodeArgs, quiet: true);
         Util.Cmd("CMD.exe", $"/C START {inspectCodeExePath} {inspectCodeArgs}");
