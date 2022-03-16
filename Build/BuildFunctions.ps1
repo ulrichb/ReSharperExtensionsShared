@@ -8,8 +8,7 @@ function Clean() {
 
 function PackageRestore() {
     Write-Host "Restoring packages ..."
-    Exec { & $NugetExecutable restore $SolutionFilePath }
-    Exec { & $MSBuildPath $SolutionFilePath /v:m /maxcpucount /nr:false /t:Restore }
+    Exec { & dotnet restore $SolutionFilePath -f --no-cache }
 }
 
 function Build() {
@@ -17,11 +16,10 @@ function Build() {
 
     $versionParameters = "AssemblyVersion=$Version;FileVersion=$Version;InformationalVersion=$(GetFullVersion)"
 
-    $msBuildParameters = "Configuration=$Configuration;TreatWarningsAsErrors=True;$versionParameters"
-    $additionalArgs = if (Test-Path variable:global:MSBuildAdditionalArgs) { $MSBuildAdditionalArgs } else { "" }
+    $buildProperties = "TreatWarningsAsErrors=True;$versionParameters"
 
-    Write-Host "Running MSBuild for solution ..."
-    Exec { & $MSBuildPath $SolutionFilePath /v:m /maxcpucount /nr:false /t:Rebuild "/p:$msBuildParameters" $additionalArgs }
+    Write-Host "Running build for solution ..."
+    Exec { & dotnet build $SolutionFilePath --no-restore --no-incremental -c $Configuration "-p:$buildProperties" }
 }
 
 function Test() {
