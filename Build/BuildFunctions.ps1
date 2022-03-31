@@ -9,6 +9,7 @@ function Clean() {
 function PackageRestore() {
     Write-Host "Restoring packages ..."
     Exec { & dotnet restore $SolutionFilePath -f --no-cache }
+    Exec { & dotnet list $SolutionFilePath package }
 }
 
 function Build() {
