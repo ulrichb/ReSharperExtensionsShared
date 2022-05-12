@@ -25,28 +25,22 @@ function Build() {
 
 function Test() {
     Write-Host "Running tests ..."
-    $nunitExePath = Join-Path (GetSolutionPackagePath "NUnit.ConsoleRunner") tools\nunit3-console.exe
-    $testResultsPath = Join-Path $BuildOutputPath "TestResult.xml"
 
-    $nunitArgs = "$NUnitTestAssemblyPaths --result=$testResultsPath $NUnitAdditionalArgs"
+    $testResultsPath = Join-Path $BuildOutputPath "TestResults"
 
-    $openCoverExePath = Join-Path (GetSolutionPackagePath "OpenCover") tools\OpenCover.Console.exe
-    $coverageResultsPath = Join-Path $BuildOutputPath "TestCoverage.xml"
-
-    Exec { 
-        & $openCoverExePath -target:$nunitExePath "-targetargs:$nunitArgs" "-filter:$TestCoverageFilter" "-excludebyattribute:*.ExcludeFromCodeCoverage*" -returntargetcode -register:user -output:$coverageResultsPath
-
-        if ($env:APPVEYOR) { 
-            Write-Host "Publishing NUnit results '$testResultsPath' ..."
-            $webClient = New-Object System.Net.WebClient
-            $webClient.UploadFile("https://ci.appveyor.com/api/testresults/nunit3/$($env:APPVEYOR_JOB_ID)", $testResultsPath)
-        }
-    }
+    Exec { & dotnet test $SolutionFilePath --no-build -c $Configuration -m:1 -r $testResultsPath --collect:"XPlat Code Coverage" --logger GitHubActions }
 
     $reportGeneratorExePath = Join-Path (GetSolutionPackagePath "ReportGenerator") tools\net47\ReportGenerator.exe
     $coverageReportPath = Join-Path $BuildOutputPath "TestCoverage"
-    $reportTypes = "HTML;Badges"
-    Exec { & $reportGeneratorExePath -reports:$coverageResultsPath -reporttypes:$reportTypes -targetdir:$coverageReportPath -verbosity:Info }
+    $reportTypes = "HTML;MarkdownSummary;Badges"
+    Exec { & $reportGeneratorExePath -reports:"$testResultsPath\*\*.xml" -reporttypes:$reportTypes -targetdir:$coverageReportPath -verbosity:Info }
+
+    $githubStepSummaryFile = $env:GITHUB_STEP_SUMMARY
+    if ($githubStepSummaryFile) {
+        Write-Host "Adding coverage summary to step summary..."
+        Add-Content $githubStepSummaryFile "`n`n"
+        Add-Content $githubStepSummaryFile (Get-Content (Join-Path $coverageReportPath "Summary.md"))
+    }
 
     if ($CoverageBadgeUploadToken) {
         Write-Host "Uploading coverage badges ..."
