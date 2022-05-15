@@ -89,7 +89,7 @@ static async Task<string> InstallCommandLineToolsPackage(string packageId, NuGet
     {
         NuGetVersion packageVersion;
 
-        using (var versionResponse = await httpClient.GetAsync($"https://api.nuget.org/v3-flatcontainer/{packageId}/index.json"))
+        using (var versionResponse = await httpClient.GetAsync($"https://api.nuget.org/v3-flatcontainer/{packageId.ToLowerInvariant()}/index.json"))
         {
             var resultJson = JObject.Parse(await versionResponse.EnsureSuccessStatusCode().Content.ReadAsStringAsync());
 
@@ -106,7 +106,7 @@ static async Task<string> InstallCommandLineToolsPackage(string packageId, NuGet
         }
         else
         {
-            var packageDownloadUrl = $"https://api.nuget.org/v3-flatcontainer/{packageId}/{packageVersion}/{packageId}.{packageVersion}.nupkg";
+            var packageDownloadUrl = $"https://api.nuget.org/v3-flatcontainer/{packageId.ToLowerInvariant()}/{packageVersion}/{packageId.ToLowerInvariant()}.{packageVersion}.nupkg";
             Console.WriteLine($"Requesting '{packageDownloadUrl}' ...");
 
             using (var downlaodResponse = await httpClient.GetAsync(packageDownloadUrl))
