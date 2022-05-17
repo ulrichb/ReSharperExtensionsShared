@@ -76,34 +76,23 @@ function UploadToDropbox([string] $authToken, [string] $localFilePath, [string] 
     $httpClient.Dispose()
 }
 
-function CalcNuGetPackageVersion([string] $reSharperVersion) {
-    $reSharperVersionInNuGetVersion = $reSharperVersion.Substring($reSharperVersion.Length - 4)
-    return (GetFullVersion) -Replace "^(\d+\.\d+\.\d+\.\d+)","`${1}$reSharperVersionInNuGetVersion"
-}
-
 function GetFullVersion() {
     if (-not $BranchName) { return "$Version-local" }
     if ($BranchName -eq "master") { return "$Version" } else { return "$Version-pre" }
 }
 
 function NugetPack() {
-    Write-Host "Injecting release notes text into .nuspec ..."
-
-    $savedNuspecContent = [System.IO.File]::ReadAllText($NuspecPath)
-
-    [xml] $nuspecXml = Get-Content $NuspecPath
-    $nuspecXml.package.metadata.releaseNotes = GetReleaseNotesText
-    $nuspecXml.Save($NuspecPath)
-
     Write-Host "Creating NuGet packages ..."
 
-    try {
-        $NugetPackProperties | % {
-            Exec { & $NugetExecutable pack $NuspecPath -Properties $_ -OutputDirectory $BuildOutputPath -NoPackageAnalysis }
-        }
-    } finally {
-        [System.IO.File]::WriteAllText($NuspecPath, $savedNuspecContent)
+    $PackageReleaseNotes = EscapeMSBuildProperty ([System.Net.WebUtility]::HtmlEncode((GetReleaseNotesText)))
+
+    $NugetPackProjects |% {
+        Exec { & dotnet pack $_ --no-build -c $Configuration -o $BuildOutputPath -p:Version=$Version -p:PackageReleaseNotes=$PackageReleaseNotes }
     }
+}
+
+function EscapeMSBuildProperty([string] $TextToEscape) {
+    return $TextToEscape -replace '%','%25' -replace ';','%3B'
 }
 
 function BuildRiderPlugin() {
