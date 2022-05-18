@@ -87,7 +87,7 @@ function NugetPack() {
     $PackageReleaseNotes = EscapeMSBuildProperty ([System.Net.WebUtility]::HtmlEncode((GetReleaseNotesText)))
 
     $NugetPackProjects |% {
-        Exec { & dotnet pack $_ --no-build -c $Configuration -o $BuildOutputPath -p:Version=$Version -p:PackageReleaseNotes=$PackageReleaseNotes }
+        Exec { & dotnet pack $_ --no-build -c $Configuration -o $BuildOutputPath -p:Version=$(GetFullVersion) -p:PackageReleaseNotes=$PackageReleaseNotes }
     }
 }
 
