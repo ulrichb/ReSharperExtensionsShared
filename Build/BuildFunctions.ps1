@@ -13,8 +13,6 @@ function PackageRestore() {
 }
 
 function Build() {
-    Write-Host "Full version: '$(GetFullVersion)'"
-
     $versionParameters = "AssemblyVersion=$Version;FileVersion=$Version;InformationalVersion=$(GetFullVersion)"
 
     $buildProperties = "TreatWarningsAsErrors=True;$versionParameters"
@@ -35,12 +33,7 @@ function Test() {
     $reportTypes = "HTML;MarkdownSummary;Badges"
     Exec { & $reportGeneratorExePath -reports:"$testResultsPath\*\*.xml" -reporttypes:$reportTypes -targetdir:$coverageReportPath -verbosity:Info }
 
-    $githubStepSummaryFile = $env:GITHUB_STEP_SUMMARY
-    if ($githubStepSummaryFile) {
-        Write-Host "Adding coverage summary to step summary..."
-        Add-Content $githubStepSummaryFile "`n`n"
-        Add-Content $githubStepSummaryFile (Get-Content (Join-Path $coverageReportPath "Summary.md"))
-    }
+    AppendToGitHubStepSummary (Get-Content (Join-Path $coverageReportPath "Summary.md"))
 
     if ($CoverageBadgeUploadToken) {
         Write-Host "Uploading coverage badges ..."
@@ -118,6 +111,13 @@ function GetSolutionPackagePath([string] $packageId) {
     [xml] $xml = Get-Content "SolutionItems.csproj"
     $version = $xml.SelectNodes("/Project/ItemGroup/PackageReference[@Include = '$packageId']/@Version") | Select -ExpandProperty Value
     return [System.IO.Path]::Combine(${env:USERPROFILE}, ".nuget", "packages", "$packageId", "$version")
+}
+
+function AppendToGitHubStepSummary ([string] $TextToAppend) {
+    $githubStepSummaryFile = $env:GITHUB_STEP_SUMMARY
+    if ($githubStepSummaryFile) {
+        Add-Content $githubStepSummaryFile $TextToAppend
+    }
 }
 
 function Exec {
