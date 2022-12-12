@@ -26,14 +26,18 @@ function Test() {
 
     $testResultsPath = Join-Path $BuildOutputPath "TestResults"
 
-    Exec { & dotnet test $SolutionFilePath --no-build -c $Configuration -m:1 -r $testResultsPath --collect:"XPlat Code Coverage" --logger GitHubActions }
+    WrapGitHubStepSummaryInDetailsBlock "Test Results" {
+        Exec { & dotnet test $SolutionFilePath --no-build -c $Configuration -m:1 -r $testResultsPath --collect:"XPlat Code Coverage" --logger GitHubActions }
+    }
 
     $reportGeneratorExePath = Join-Path (GetSolutionPackagePath "ReportGenerator") tools\net47\ReportGenerator.exe
     $coverageReportPath = Join-Path $BuildOutputPath "TestCoverage"
     $reportTypes = "HTML;MarkdownSummary;Badges"
     Exec { & $reportGeneratorExePath -reports:"$testResultsPath\*\*.xml" -reporttypes:$reportTypes -targetdir:$coverageReportPath -verbosity:Info }
 
-    AppendToGitHubStepSummary (Get-Content (Join-Path $coverageReportPath "Summary.md"))
+    WrapGitHubStepSummaryInDetailsBlock "Test Coverage" {
+        AppendToGitHubStepSummary (Get-Content (Join-Path $coverageReportPath "Summary.md"))
+    }
 
     if ($CoverageBadgeUploadToken) {
         Write-Host "Uploading coverage badges ..."
@@ -113,10 +117,20 @@ function GetSolutionPackagePath([string] $packageId) {
     return [System.IO.Path]::Combine(${env:USERPROFILE}, ".nuget", "packages", "$packageId", "$version")
 }
 
-function AppendToGitHubStepSummary ([string] $TextToAppend) {
-    $githubStepSummaryFile = $env:GITHUB_STEP_SUMMARY
-    if ($githubStepSummaryFile) {
-        Add-Content $githubStepSummaryFile $TextToAppend
+function AppendToGitHubStepSummary ([object[]]$ContentToAppend) {
+    $private:githubStepSummaryFile = $env:GITHUB_STEP_SUMMARY
+    if ($private:githubStepSummaryFile) {
+        Add-Content $private:githubStepSummaryFile $ContentToAppend
+    }
+}
+
+function WrapGitHubStepSummaryInDetailsBlock ([string] $DetailsSummary, [scriptblock] $Action) {
+    AppendToGitHubStepSummary "<details><summary>$DetailsSummary</summary>"
+    AppendToGitHubStepSummary ""
+    try {
+        & $Action
+    } finally {
+        AppendToGitHubStepSummary "</details>`n"
     }
 }
 
