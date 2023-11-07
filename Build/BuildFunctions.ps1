@@ -29,8 +29,16 @@ function Test() {
 
     $testResultsPath = Join-Path $BuildOutputPath "TestResults"
 
-    WrapGitHubStepSummaryInDetailsBlock "Test Results" {
-        Exec { & dotnet test $SolutionFilePath --no-build -c $Configuration -m:1 -r $testResultsPath --collect:"XPlat Code Coverage" --logger GitHubActions }
+    try {
+        WrapGitHubStepSummaryInDetailsBlock "Test Results" {
+            Exec {
+                & dotnet test $SolutionFilePath `
+                    --no-build -c $Configuration -m:1 -r $testResultsPath `
+                    --collect:"XPlat Code Coverage" --logger GitHubActions
+            }
+        }
+    } finally {
+        Copy-Item "$env:TEMP/JetLogs" "$testResultsPath/JetLogs" -Recurse
     }
 
     $reportGeneratorExePath = Join-Path (GetSolutionPackagePath "ReportGenerator") tools\net47\ReportGenerator.exe
