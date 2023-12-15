@@ -1,4 +1,4 @@
-function Clean() {
+function Clean {
     New-Item $BuildOutputPath -Type Directory -Force | Out-Null
     Remove-Item $BuildOutputPath\* -Recurse -Force
     if (Test-Path variable:global:RiderPluginProject) {
@@ -15,7 +15,7 @@ function PackageRestore() {
     Exec { & dotnet list $SolutionFilePath package }
 }
 
-function Build() {
+function Build {
     $versionParameters = "AssemblyVersion=$Version;FileVersion=$Version;InformationalVersion=$(GetFullVersion)"
 
     $buildProperties = "TreatWarningsAsErrors=True;$versionParameters"
@@ -24,7 +24,7 @@ function Build() {
     Exec { & dotnet build $SolutionFilePath --no-restore --no-incremental -c $Configuration "-p:$buildProperties" }
 }
 
-function Test() {
+function Test {
     Write-Host "Running tests ..."
 
     $testResultsPath = Join-Path $BuildOutputPath "TestResults"
@@ -89,7 +89,7 @@ function GetFullVersion() {
     if ($BranchName -eq "master") { return "$Version" } else { return "$Version-pre" }
 }
 
-function NugetPack() {
+function NugetPack {
     Write-Host "Creating NuGet packages ..."
 
     $PackageReleaseNotes = EscapeMSBuildProperty ([System.Net.WebUtility]::HtmlEncode((GetReleaseNotesText)))
@@ -103,19 +103,19 @@ function EscapeMSBuildProperty([string] $TextToEscape) {
     return $TextToEscape -replace '%','%25' -replace ';','%3B'
 }
 
-function BuildRiderPlugin() {
+function BuildRiderPlugin {
     Exec { & "$RiderPluginProject\gradlew" --no-daemon -p $RiderPluginProject "buildPlugin" "-Pversion=$(GetFullVersion)" "-Pconfiguration=$Configuration" }
     Copy-Item "$RiderPluginProject\build\distributions\*.zip" $BuildOutputPath
 }
 
-function GetReleaseNotesText() {
+function GetReleaseNotesText {
     $releaseNotesText = [System.IO.File]::ReadAllText("History.md")
     $releaseNotesText = ([Regex]::Matches($releaseNotesText, '(?s)(###.+?###.+?)(?=###|$)').Captures | Select -First 10) -Join ''
     $releaseNotesText = [Regex]::Replace($releaseNotesText, "\r?\n", "<br/>`n")
     return $releaseNotesText
 }
 
-function NugetPush() {
+function NugetPush {
     Write-Host "Pushing NuGet packages ..."
     Get-ChildItem (Join-Path $BuildOutputPath "*.nupkg") | % {
         Exec { & $NugetExecutable push $_ $NugetPushKey -Source $NugetPushServer }
@@ -128,14 +128,14 @@ function GetSolutionPackagePath([string] $packageId) {
     return [System.IO.Path]::Combine(${env:USERPROFILE}, ".nuget", "packages", "$packageId", "$version")
 }
 
-function AppendToGitHubStepSummary ([object[]]$ContentToAppend) {
+function AppendToGitHubStepSummary([object[]]$ContentToAppend) {
     $private:githubStepSummaryFile = $env:GITHUB_STEP_SUMMARY
     if ($private:githubStepSummaryFile) {
         Add-Content $private:githubStepSummaryFile $ContentToAppend
     }
 }
 
-function WrapGitHubStepSummaryInDetailsBlock ([string] $DetailsSummary, [scriptblock] $Action) {
+function WrapGitHubStepSummaryInDetailsBlock([string] $DetailsSummary, [scriptblock] $Action) {
     AppendToGitHubStepSummary "<details><summary>$DetailsSummary</summary>"
     AppendToGitHubStepSummary ""
     try {
