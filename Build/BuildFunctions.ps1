@@ -6,13 +6,13 @@ function Clean {
     }
 }
 
-function PackageRestore() {
-    Write-Host ".NET SDK Version:"
+function PackageRestore {
+    Write-Host ".NET SDK Version: " -NoNewLine
     Exec { & dotnet --version }
 
     Write-Host "Restoring packages ..."
     Exec { & dotnet restore $SolutionFilePath -f --no-cache }
-    Exec { & dotnet list $SolutionFilePath package }
+    Exec { & dotnet list (Resolve-Path $SolutionFilePath) package } # Absolute path to workaround https://github.com/NuGet/Home/issues/12954
 }
 
 function Build {
