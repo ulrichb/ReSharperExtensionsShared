@@ -38,7 +38,9 @@ function Test {
             }
         }
     } finally {
-        Copy-Item "$env:TEMP/JetLogs" "$testResultsPath/JetLogs" -Recurse
+        if (Test-Path "$env:TEMP/JetLogs") {
+            Copy-Item "$env:TEMP/JetLogs" "$testResultsPath/JetLogs" -Recurse
+        }
     }
 
     $reportGeneratorExePath = Join-Path (GetSolutionPackagePath "ReportGenerator") tools\net47\ReportGenerator.exe
