@@ -33,7 +33,7 @@ function Test {
         WrapGitHubStepSummaryInDetailsBlock "Test Results" {
             Exec {
                 & dotnet test $SolutionFilePath `
-                    --no-build -c $Configuration -m:1 -r $testResultsPath `
+                    --no-build -c $Configuration -m:1 --results-directory $testResultsPath `
                     --collect:"XPlat Code Coverage" --logger GitHubActions
             }
         }
