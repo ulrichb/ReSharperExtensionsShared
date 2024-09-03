@@ -106,7 +106,7 @@ function EscapeMSBuildProperty([string] $TextToEscape) {
 }
 
 function BuildRiderPlugin {
-    Exec { & "$RiderPluginProject\gradlew" --no-daemon -p $RiderPluginProject "buildPlugin" "-Pversion=$(GetFullVersion)" "-Pconfiguration=$Configuration" }
+    Exec { & "$RiderPluginProject\gradlew" --no-daemon -p $RiderPluginProject "buildPlugin" "-PPluginVersion=$(GetFullVersion)" "-PBuildConfiguration=$Configuration" }
     Copy-Item "$RiderPluginProject\build\distributions\*.zip" $BuildOutputPath
 }
 
