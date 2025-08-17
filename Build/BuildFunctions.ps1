@@ -88,7 +88,7 @@ function UploadToDropbox([string] $authToken, [string] $localFilePath, [string] 
 
 function GetFullVersion() {
     if (-not $BranchName) { return "$Version-local" }
-    if ($BranchName -eq "master") { return "$Version" } else { return "$Version-pre" }
+    if ($BranchName -eq "main") { return "$Version" } else { return "$Version-pre" }
 }
 
 function NugetPack {
