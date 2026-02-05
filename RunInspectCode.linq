@@ -16,7 +16,7 @@ async Task Main(string workingDirectory = @"C:\Temp\InspectCodeTests\", string t
     var scriptDir = Path.GetDirectoryName(Util.CurrentQueryPath);
     var solutionDir = Path.Combine(scriptDir, "..");
     var outputDir = Path.Combine(solutionDir, "Build", "Output");
-    var commandLineToolsPackageId = "JetBrains.ReSharper.CommandLineTools";
+    var resharperGlobalToolsPackageId = "JetBrains.ReSharper.GlobalTools";
     var inspectCodeCachePath = "RSAT_InspectCodeCache";
 
     Environment.CurrentDirectory = workingDirectory;
@@ -28,7 +28,7 @@ async Task Main(string workingDirectory = @"C:\Temp\InspectCodeTests\", string t
     var latestBuiltNugetPackageReSharperVersion = (Major: 2000 + (latestBuiltNugetPackageFourthVersionPart / 10) % 100, Minor: latestBuiltNugetPackageFourthVersionPart % 10);
 
     var inspectCodeDirectory = await InstallCommandLineToolsPackage(
-        commandLineToolsPackageId,
+        resharperGlobalToolsPackageId,
         fromExclusive: new NuGetVersion(latestBuiltNugetPackageReSharperVersion.Major, latestBuiltNugetPackageReSharperVersion.Minor - 1, 0),
         toExclusive: new NuGetVersion(latestBuiltNugetPackageReSharperVersion.Major, latestBuiltNugetPackageReSharperVersion.Minor, int.MaxValue));
 
@@ -119,7 +119,7 @@ static async Task<string> InstallCommandLineToolsPackage(string packageId, NuGet
             }
         }
 
-        return Path.Combine(targetPath, "tools");
+        return Path.Combine(Directory.EnumerateDirectories(Path.Combine(targetPath, "tools")).Single(), "any");
     }
 }
 
